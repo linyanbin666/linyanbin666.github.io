@@ -316,11 +316,11 @@ uglyURLs = false
     # 3. posts     List of post’s summary
     # 4. page      Normal page/post
 
-    homeLayout = "posts"
+    homeLayout = "poetry"
 
     ## Poetry
     # Verse (Markdown supported)
-    homePoetry = []
+    homePoetry = ["我是一条酸菜鱼", "又酸又菜又多余", "我是一只黄焖鸡", "又黄又闷又辣鸡", "我是一条土豆丝儿", "又土又逗又屌丝", "我是一瓶二锅头", "又二又乖又上头", "好菜啊"]
     # Padding of links at the bottom
     # Unit: em
     homeLinksPadding = 1
