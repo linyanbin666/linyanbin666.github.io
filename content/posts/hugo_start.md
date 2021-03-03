@@ -1,7 +1,7 @@
 ---
 title: "Hugo + Github Pages搭建个人博客"
 date: 2021-03-03T13:11:51+08:00
-draft: true
+draft: false
 ---
 #### 下载Hugo
 ##### 二进制安装
