@@ -23,10 +23,75 @@
         
             <copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en)</copyright>
         
-        <lastBuildDate>Wed, 03 Mar 2021 13:49:32 &#43;0800</lastBuildDate>
+        <lastBuildDate>Wed, 03 Mar 2021 14:06:44 &#43;0800</lastBuildDate>
         
             <atom:link rel="self" type="application/rss&#43;xml" href="https://linyanbin666.github.io/rss.xml" />
         
+        
+            <item>
+                <title>Hugo &#43; Github Pages搭建个人博客</title>
+                <link>https://linyanbin666.github.io/posts/hugo_start/</link>
+                <guid isPermaLink="true">https://linyanbin666.github.io/posts/hugo_start/</guid>
+                <pubDate>Wed, 03 Mar 2021 13:11:51 &#43;0800</pubDate>
+                
+                    <author>linyanbin98@gmail.com (Yanbin Lin)</author>
+                
+                <copyright>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en)</copyright>
+                
+                    <description>&lt;h4 id=&#34;下载hugo&#34;&gt;下载Hugo&lt;/h4&gt;
+&lt;h5 id=&#34;二进制安装&#34;&gt;二进制安装&lt;/h5&gt;
+&lt;pre&gt;&lt;code&gt;1. 上github（https://github.com/gohugoio/hugo/releases）下载对应的压缩包，然后进行解压，再将目录配置到环境变量中
+2. 执行：hugo version，验证是否安装成功
+&lt;/code&gt;&lt;/pre&gt;&lt;h5 id=&#34;源码安装&#34;&gt;源码安装&lt;/h5&gt;
+&lt;pre&gt;&lt;code&gt;1. 安装Git（https://git-scm.com/downloads）
+2. 安装Golang（https://golang.org/dl/）
+3. 安装Hugo
+git clone https://github.com/gohugoio/hugo.git
+cd hugo
+go install
+
+PS：如果需要下载支持编译SASS的版本，需要为clone时加上--tags extended参数，
+安装go模块由go install改为执行：CGO_ENABLED=1 go install --tags extended，
+如果安装go模块时报错：exec: &amp;quot;gcc&amp;quot;: executable file not found in %PATH%，可按参考文献1做法安装gcc后再重试
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;PS：如果按源码的方式安装，后续执行hugo命令可能需要在git的客户端内才能执行，在windows cmd客户端内执行可能会报一下错误
+&lt;img src=&#34;https://linyanbin666.github.io/images/hugo_start-hugo_exe_error.png&#34; alt=&#34;Windows窗口执行错误&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;创建项目&#34;&gt;创建项目&lt;/h4&gt;
+&lt;pre&gt;&lt;code&gt;# 生成项目
+hugo new site &amp;quot;项目名&amp;quot;
+# 生成博文
+hogo new posts/xxx.md
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;安装主题&#34;&gt;安装主题&lt;/h4&gt;
+&lt;p&gt;官网主题库：&lt;a href=&#34;https://themes.gohugo.io/&#34;&gt;Hugo Themes&lt;/a&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 引入主题
+git submodule add &amp;lt;主题仓库地址&amp;gt; themes/&amp;lt;主题名&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;修改配置&#34;&gt;修改配置&lt;/h4&gt;
+&lt;p&gt;一般主题都有提供一份config.toml或config.yml配置，将其拷贝到项目的根目录并进行修改即可，如果使用Github Pages发布的话，需要在config.toml内添加：publishDir = docs 配置&lt;/p&gt;
+&lt;h4 id=&#34;生成静态站点的目录&#34;&gt;生成静态站点的目录&lt;/h4&gt;
+&lt;pre&gt;&lt;code&gt;# 根目录下执行hugo命令生成静态站点的目录，默认为 public 目录
+hugo
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;配置github-pages&#34;&gt;配置Github Pages&lt;/h4&gt;
+&lt;p&gt;在仓库的Settings -&amp;gt; Options下方找到Github Pages配置，配置source为以上生成的博客文件夹
+&lt;img src=&#34;https://linyanbin666.github.io/images/hugo_start-github_pages_config.png&#34; alt=&#34;GitHub Pages配置&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;参考文献&#34;&gt;参考文献&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.jianshu.com/p/c38483c30fb7&#34;&gt;golang 编译cgo模块exec: &amp;ldquo;gcc&amp;rdquo;: executable file not found in %PATH%&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://jsonbruce.com/posts/userguide/&#34;&gt;Hugo 和 GitHub Pages 使用指南&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://sspai.com/post/59904&#34;&gt;浅谈我为什么从 HEXO 迁移到 HUGO&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+                
+                
+                
+                
+                
+                    
+                        
+                    
+                        
+                    
+                
+            </item>
         
     </channel>
 </rss>
