@@ -484,7 +484,7 @@ uglyURLs = false
     #       name of the folder under the
     #       site’s `content` directory.
 
-    # mainSections = ["posts"]
+    mainSections = ["posts"]
 
 
     ######################################
