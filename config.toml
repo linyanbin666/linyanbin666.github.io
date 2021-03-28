@@ -3,10 +3,10 @@
 
 baseURL = "https://linyanbin666.github.io/"
 title = "原生菜鸟"
-languageCode = "en"
-hasCJKLanguage = false
+languageCode = "zh-CN"
+hasCJKLanguage = true
 # Copyright information (Markdown supported)
-copyright = "[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en)"
+# copyright = "[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en)"
 
 # Name of theme
 theme = "meme"
@@ -18,7 +18,7 @@ publishDir = "docs"
 newContentEditor = ""
 
 # i18n
-defaultContentLanguage = "en"
+defaultContentLanguage = "zh"
 defaultContentLanguageInSubdir = false
 
 # Pluralize titles in lists?
@@ -34,10 +34,10 @@ enableEmoji = false
 footnoteReturnLinkContents = "↩"
 
 # Enable `.GitInfo` object for each page?
-enableGitInfo = false
+enableGitInfo = true
 
 # Enable generation of `robots.txt` file?
-enableRobotsTXT = true
+enableRobotsTXT = false
 
 # Number of items per page in paginated
 # lists (valid for the `posts` homepage
@@ -56,7 +56,7 @@ uglyURLs = false
 
 # Taxonomies
 [taxonomies]
-    category = "categories"
+    #category = "categories"
     tag = "tags"
 
 # Modified date
@@ -99,15 +99,15 @@ uglyURLs = false
     # Name
     name = "Yanbin Lin"
     # Email
-    email = "linyanbin98@gmail.com"
+    email = "1468387317@qq.com"
     # Motto or introduction
-    motto = "Newbie"
+    motto = "To Be Better"
     # Avatar
-    #avatar = "/icons/apple-touch-icon.png"
+    avatar = "/icons/apple-touch-icon.png"
     # Personal website, default: baseURL
-    #website = "https://io-oi.me/"
+    website = "https://linyanbin666.github.io/"
     # Twitter
-    #twitter = "reuixiy"
+    #twitter = "linyanbin98"
 
 # Related content
 [related]
@@ -202,25 +202,25 @@ uglyURLs = false
     #     post = "home"
     [[menu.main]]
         url = "/posts/"
-        name = "Posts"
+        name = "技术"
         weight = 2
         pre = "internal"
         post = "archive"
     [[menu.main]]
-        url = "/categories/"
-        name = "Categories"
+        url = "/life/"
+        name = "生活"
         weight = 3
         pre = "internal"
         post = "th"
     [[menu.main]]
         url = "/tags/"
-        name = "Tags"
+        name = "标签"
         weight = 4
         pre = "internal"
         post = "tags"
     [[menu.main]]
         url = "/about/"
-        name = "About"
+        name = "关于"
         weight = 5
         pre = "internal"
         post = "user-circle"
@@ -292,10 +292,10 @@ uglyURLs = false
     ######################################
     # Menu Bar
 
-    enableMenu = true
+    enableMenu = false
     # Note: invalid for header layout flex
 
-    displayMenuInHome = true
+    displayMenuInHome = false
     # Note: invalid for header layout flex
 
     # Highlight current menu item by section?
@@ -344,15 +344,15 @@ uglyURLs = false
     siteLogo = "/icons/apple-touch-icon.png"
     # Note: used for JSON-LD, Open Graph
 
-    siteDescription = "MemE is a powerful and highly customizable GoHugo theme for personal blogs."
+    siteDescription = "原生菜鸟的个人博客，记录与分享个人的所见所学所得."
     # Note: used for HTML head meta, JSON-LD,
     #       Open Graph, Atom, RSS
 
-    siteCreatedTime = "1969-07-20T20:17:43+00:00"
+    siteCreatedTime = "2021-03-02T11:17:43+00:00"
     # ATTENTION: keep this format, change
     #            the number
 
-    siteTwitter = "reuixiy"
+    #siteTwitter = "linyanbin"
     # Note: used for Twitter Cards
 
 
@@ -382,7 +382,7 @@ uglyURLs = false
     # tree organization structure of your
     # posts.
 
-    categoryBy = "categories"
+    categoryBy = "sections"
     # ATTENTION: If you set it to `sections`,
     #            be sure to delete `categories`
     #            in `taxonomies` at the top
@@ -484,7 +484,7 @@ uglyURLs = false
     #       name of the folder under the
     #       site’s `content` directory.
 
-    mainSections = ["posts"]
+    mainSections = ["posts", "life"]
 
 
     ######################################
@@ -753,12 +753,12 @@ uglyURLs = false
     ######################################
     # Post Meta Info
 
-    enablePostMeta = true
+    enablePostMeta = false
     # Note: *global settings*
     #       `meta` in post’s Front Matter
     #       has a higher priority than here
 
-    enablePostMetaInHome = true
+    enablePostMetaInHome = false
     # Note: valid for the `posts` and
     #       `page` homepage layout only
 
@@ -888,7 +888,7 @@ uglyURLs = false
     #       and the HTML code you add must
     #       start with `<video src="`
 
-    enableVideoHost = false
+    enableVideoHost = true
 
     videoHostURL = "https://example.com/"
 
@@ -941,11 +941,11 @@ uglyURLs = false
     # Menu bar
     fontFamilyMenu = ""
     # Post title, post subtitle, list title, year and month title of the list, related posts title, previous/next post title, header of table, term/name in a definition list
-    fontFamilyTitle = "'Comfortaa', sans-serif"
+    fontFamilyTitle = "'Noto Serif SC', 'Amstelvar', serif"
     # Headings, toc title
-    fontFamilyHeadings = "'Comfortaa', sans-serif"
+    fontFamilyHeadings = "'Noto Serif SC', 'Amstelvar', serif"
     # Code, superscript, post meta info, post updated badge, post gitinfo, minimal footer, busuanzi site view counter
-    fontFamilyCode = "'Source Code Pro', monospace"
+    fontFamilyCode = "'Source Code Pro', 'Noto Serif SC', monospace"
     # Blockquotes
     fontFamilyQuote = ""
     # Table of contents
@@ -953,9 +953,9 @@ uglyURLs = false
     # Caption
     fontFamilyCaption = ""
     # Footer
-    fontFamilyFooter = ""
+    fontFamilyFooter = "'Source Code Pro', 'Noto Serif SC', monospace"
     # Body
-    fontFamilyBody = "'IBM Plex Serif', serif"
+    fontFamilyBody = "'Amstelvar', 'Noto Serif SC', serif"
 
     # Embed fonts link
     fontsLink = "https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,700;1,400;1,700&family=Source+Code+Pro:ital,wght@0,400;0,700;1,400;1,700&family=Comfortaa:wght@700&display=swap"
@@ -972,7 +972,7 @@ uglyURLs = false
     ######################################
     ## Font Size (unit: px)
 
-    fontSize = 18
+    fontSize = 16
 
     ######################################
     ## Tab Size
@@ -982,7 +982,7 @@ uglyURLs = false
     ######################################
     ## Line Height
 
-    lineHeight = 1.618
+    lineHeight = 2
     # Note: apply to post paragraph & toc
     #       only
 
@@ -1005,7 +1005,7 @@ uglyURLs = false
     ######################################
     ## Text Justification
 
-    enableJustify = false
+    enableJustify = true
     # Note: *global settings*
     #       `align` in post’s Front Matter
     #       has a higher priority than here
@@ -1048,12 +1048,12 @@ uglyURLs = false
     # Note: new Markdown syntax created by MemE
     #       `..文本..`
 
-    enableEmphasisPoint = false
+    enableEmphasisPoint = true
 
     ######################################
     ## Chinese Punctuation Glyph Correction
 
-    enableChinesePunctuationGlyphCorrection = false
+    enableChinesePunctuationGlyphCorrection = true
 
 
     ######################################
@@ -1070,7 +1070,7 @@ uglyURLs = false
     ######################################
     # Post Updated Badge
 
-    enablePostUpdatedBadge = true
+    enablePostUpdatedBadge = false
 
     displayUpdatedBadge = true
     # Note: *global settings*
@@ -1092,8 +1092,8 @@ uglyURLs = false
     #       `gitinfo` in post’s Front Matter
     #       has a higher priority than here
 
-    repoURL = ""
-    repoEditURL = ""
+    repoURL = "https://github.com/linyanbin666/linyanbin666.github.io"
+    repoEditURL = "https://github.com/linyanbin666/linyanbin666.github.io/blob/master"
 
     gitIcon = "code-branch"
     displayCommitHash = true
@@ -1235,9 +1235,9 @@ uglyURLs = false
     customFooter = ""
 
     displayBusuanziSiteUVAndPV = false
-    busuanziSiteUVText = "Site UV"
+    busuanziSiteUVText = "本站访客数"
     busuanziSiteUVIcon = "user"
-    busuanziSitePVText = "Site PV"
+    busuanziSitePVText = "本站访问量"
     busuanziSitePVIcon = "eye"
     # Note: render only in production
     #       environment
