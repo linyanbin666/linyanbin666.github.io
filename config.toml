@@ -12,7 +12,7 @@ hasCJKLanguage = true
 theme = "meme"
 
 # publish dir
-publishDir = "docs"
+publishDir = "public"
 
 # `hugo new` automatically opened text editor
 newContentEditor = ""
