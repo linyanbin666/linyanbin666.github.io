@@ -56,7 +56,7 @@ uglyURLs = false
 
 # Taxonomies
 [taxonomies]
-    #category = "categories"
+    category = "categories"
     tag = "tags"
 
 # Modified date
@@ -212,26 +212,32 @@ uglyURLs = false
         weight = 3
         pre = "internal"
         post = "th"
+	[[menu.main]]
+        url = "/categories/"
+        name = "分类"
+        weight = 4
+        pre = "internal"
+        post = "categories"
     [[menu.main]]
         url = "/tags/"
         name = "标签"
-        weight = 4
+        weight = 5
         pre = "internal"
         post = "tags"
     [[menu.main]]
         url = "/about/"
         name = "关于"
-        weight = 5
+        weight = 6
         pre = "internal"
         post = "user-circle"
     [[menu.main]]
-        weight = 6
+        weight = 7
         identifier = "theme-switcher"
     [[menu.main]]
-        weight = 7
+        weight = 8
         identifier = "lang-switcher"
     [[menu.main]]
-        weight = 8
+        weight = 9
         identifier = "search"
         post = "search"
 

@@ -2,6 +2,7 @@
 title: "Hugo + Github Pages搭建个人博客"
 date: 2021-03-03T13:11:51+08:00
 tags: ["Hugo", "搭建个人博客"]
+categories: ["静态网站"]
 draft: false
 ---
 #### 下载Hugo
