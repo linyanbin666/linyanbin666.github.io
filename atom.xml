@@ -1,0 +1,744 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN"><title type="text">原生菜鸟</title><subtitle type="html">原生菜鸟的个人博客，记录与分享个人的所见所学所得.</subtitle><updated>2021-04-27T14:07:11+08:00</updated><id>https://ithorizon.top/</id><link rel="alternate" type="text/html" href="https://ithorizon.top/"/><link rel="self" type="application/atom+xml" href="https://ithorizon.top/atom.xml"/><author><name>Yanbin Lin</name><uri>https://ithorizon.top/</uri><email>1468387317@qq.com</email></author><generator uri="https://gohugo.io/" version="0.82.0">Hugo</generator><entry><title type="text">Promise学习笔记（B站）</title><link rel="alternate" type="text/html" href="https://ithorizon.top/posts/atguigu_promise_note/"/><id>https://ithorizon.top/posts/atguigu_promise_note/</id><updated>2021-04-18T16:48:47+08:00</updated><published>2021-04-18T16:27:31+08:00</published><author><name>Yanbin Lin</name><uri>https://ithorizon.top/</uri><email>1468387317@qq.com</email></author><summary type="html">Promise是什么？ 理解 Promise是ES6引入的一种异步编程的解决方案 具体表达……</summary><content type="html">&lt;h3 id="promise是什么">Promise是什么？&lt;/h3>
+&lt;h4 id="理解">理解&lt;/h4>
+&lt;ol>
+&lt;li>Promise是ES6引入的一种异步编程的解决方案&lt;/li>
+&lt;li>具体表达&lt;/li>
+&lt;/ol>
+&lt;ul>
+&lt;li>从语法上来说，Promise是一个构造函数&lt;/li>
+&lt;li>从功能上来说，promise对象用来封装一个异步操作并可以获取其返回结果&lt;/li>
+&lt;/ul>
+&lt;h4 id="promise的状态改变">promise的状态改变&lt;/h4>
+&lt;ul>
+&lt;li>pending 变为 resolved（fulfilled）&lt;/li>
+&lt;li>pending 变为 rejected
+PS：一个promise对象只能改变一次，无论变为成功或失败，都会有一个结果数据，成功的结果一般称为 value，失败的结果一般称为 reason&lt;/li>
+&lt;/ul>
+&lt;h4 id="promise的基本运行流程">promise的基本运行流程&lt;/h4>
+&lt;p>&lt;img src="https://ithorizon.top/images/atguigu_promise_note-promise_run_process.png" alt="Promise运行流程">&lt;/p>
+&lt;h4 id="promise的基本使用">promise的基本使用&lt;/h4>
+&lt;pre>&lt;code>const p = new Promise((resolve, reject) =&amp;gt; {
+setTimeout(() =&amp;gt; {
+const time = Date.now();
+if (time % 2 === 0) {
+resolve('成功的数据，time=' + time)
+} else {
+reject('失败的数据，time=' + time)
+}
+}, 1000)
+})
+p.then(value =&amp;gt; {
+console.log('成功的回调', value)
+}, reason =&amp;gt; {
+console.log('失败的回调', value)
+})
+&lt;/code>&lt;/pre>&lt;h3 id="为什么要用promise">为什么要用Promise&lt;/h3>
+&lt;h4 id="指定回调函数的方式更加灵活">指定回调函数的方式更加灵活&lt;/h4>
+&lt;ul>
+&lt;li>旧的：必须在启动异步任务前指定&lt;/li>
+&lt;li>promise：启动异步任务 =&amp;gt; 返回promise对象 =&amp;gt; 给promise对象绑定回调函数（甚至可以在异步任务执行结束后再指定）&lt;/li>
+&lt;/ul>
+&lt;h4 id="支持链式调用解决回调地狱问题">支持链式调用，解决回调地狱问题&lt;/h4>
+&lt;ul>
+&lt;li>什么是回调地狱？
+回调函数嵌套调用，外部回调函数异步执行的结果是嵌套的回调函数执行的条件&lt;/li>
+&lt;li>回调地狱的缺点？
+不便于阅读/不便于异常处理&lt;/li>
+&lt;li>解决方案：promise链式调用&lt;/li>
+&lt;li>终极解决方案：async/await&lt;/li>
+&lt;/ul>
+&lt;h3 id="如何使用promise">如何使用Promise？&lt;/h3>
+&lt;h4 id="api">API&lt;/h4>
+&lt;ul>
+&lt;li>Promise构造函数：Promise(executor)
+&lt;ul>
+&lt;li>executor函数：执行器 (resolve, reject) =&amp;gt; {}&lt;/li>
+&lt;li>resolve函数：成功时调用的函数 resolve =&amp;gt; {}&lt;/li>
+&lt;li>reject函数：失败时调用的函数 reject =&amp;gt; {}&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Promise.prototype.then&lt;/li>
+&lt;li>Promise.prototype.catch&lt;/li>
+&lt;li>Promise.prototype.finally&lt;/li>
+&lt;li>Promise.resolve&lt;/li>
+&lt;li>Promise.reject&lt;/li>
+&lt;li>Promise.race&lt;/li>
+&lt;li>Promise.all&lt;/li>
+&lt;li>&amp;hellip;.&lt;/li>
+&lt;/ul>
+&lt;h4 id="promise的几个关键问题">promise的几个关键问题&lt;/h4>
+&lt;ol>
+&lt;li>如何改变promise的状态？&lt;/li>
+&lt;/ol>
+&lt;ul>
+&lt;li>resolve(vale)：如果当前是 pending 就会变为 resolved&lt;/li>
+&lt;li>reject(reason)：如果当前是 pending 就会变为 rejected&lt;/li>
+&lt;li>抛出异常：如果当前是 pending 就会变为 rejected&lt;/li>
+&lt;/ul>
+&lt;ol start="2">
+&lt;li>
+&lt;p>一个 promise 指定多个成功/失败回调函数，都会调用吗？
+单 promise 改变为对应状态时都会调用&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>改变 promise 状态和指定回调函数谁先谁后？&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;ul>
+&lt;li>都有可能，正常情况下是先指定回调再改变状态，但也可以先改状态再指定回调&lt;/li>
+&lt;li>如何先改状态再指定回调？
+&lt;ul>
+&lt;li>在执行器中直接调用resolve()/reject()&lt;/li>
+&lt;li>延迟更长时间才调用then()&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;ol start="4">
+&lt;li>promise.then() 返回的新 promise 的结果状态由什么决定？&lt;/li>
+&lt;/ol>
+&lt;ul>
+&lt;li>简单表达：由 then() 指定的回调函数执行的结果决定&lt;/li>
+&lt;li>详细表达：
+&lt;ul>
+&lt;li>如果抛出异常，新 promise 变为 rejected，reason 为抛出的异常&lt;/li>
+&lt;li>如果返回的是非 promise 对象，新 promise 变为 resolved，value 为返回的值&lt;/li>
+&lt;li>如果返回的是一个 promise 对象，此 promise 对象的结果会成为新 promise 的结果&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;ol start="5">
+&lt;li>
+&lt;p>promise 如何串连多个操作任务？
+promise 的 then() 返回一个新的 promise，通过 then() 的链式调用串连多个同步/异步任务&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>promise 异常传透&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;ul>
+&lt;li>理解：当使用 promise 的 then 链式调用时，可以在最后指定失败的回调，前面任何操作出了异常，都会传到最后失败的回调中处理&lt;/li>
+&lt;li>原理：then 方法未指定 onRejected 回调函数时，其默认值会是：reason =&amp;gt; Promise.reject(reason)，将异常传递下去&lt;/li>
+&lt;/ul>
+&lt;ol start="7">
+&lt;li>中断 promise 链&lt;/li>
+&lt;/ol>
+&lt;ul>
+&lt;li>理解：当使用 promise 的 then 链式调用时，在中间中断，不在调用后面的回调函数&lt;/li>
+&lt;li>办法：在回调函数中返回一个 pending 状态的 promise 对象（如：new Promise(() =&amp;gt; {})）&lt;/li>
+&lt;/ul>
+&lt;h3 id="async与await">async与await&lt;/h3>
+&lt;ul>
+&lt;li>async 函数
+&lt;ul>
+&lt;li>函数的返回值是 promise 对象&lt;/li>
+&lt;li>promise 对象的结果由 async 函数执行的返回值决定&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>await 表达式
+&lt;ul>
+&lt;li>await 右侧表达式一般为 promise 对象，但也可以是其他值&lt;/li>
+&lt;li>如果表达式是 promise 对象，await 返回的是 promise 成功的值&lt;/li>
+&lt;li>如果表达式是其他值，直接将此值作为 await 的返回值&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>注意点
+&lt;ul>
+&lt;li>await 必须写在 async 函数中，但 async 函数可以没有 await&lt;/li>
+&lt;li>如果 await 的 promise 失败了，会抛出异常，需要通过try&amp;hellip;catch捕获处理&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="js异步之宏队列与微队列">JS异步之宏队列与微队列&lt;/h3>
+&lt;h4 id="原理图">原理图&lt;/h4>
+&lt;blockquote>
+&lt;p>图片来源：https://www.cnblogs.com/BAHG/p/12921321.html
+&lt;img src="https://ithorizon.top/images/atguigu_promise_note-macro_queue_and_micro_queue.png" alt="JS异步之宏队列与微队列">&lt;/p>
+&lt;/blockquote>
+&lt;h4 id="说明">说明&lt;/h4>
+&lt;ol>
+&lt;li>JS中用来存储执行回调函数的队列包含2个，分别为宏队列和微队列&lt;/li>
+&lt;li>宏队列：用来保存待执行的宏任务（回调），比如：定时器回调/DOM事件回调/Ajax回调&lt;/li>
+&lt;li>微队列：用来保存待执行的微任务（回调），比如：promise的回调、MutationObserver的回调&lt;/li>
+&lt;li>JS执行时会区分这两个队列&lt;/li>
+&lt;/ol>
+&lt;ul>
+&lt;li>JS引擎首先必须先执行所有的初始化同步任务代码&lt;/li>
+&lt;li>每次准备取出第一个宏任务执行前，都要将所有的微任务取出执行，即微队列的优先级比宏任务高，且与微任务所处的代码位置无关&lt;/li>
+&lt;/ul></content><category scheme="https://ithorizon.top/posts/" term="posts" label="posts"/><category scheme="https://ithorizon.top/categories/%E5%89%8D%E7%AB%AF/" term="前端" label="前端"/><category scheme="https://ithorizon.top/tags/promise/" term="Promise" label="Promise"/></entry><entry><title type="text">ES6-11新特性学习笔记（B站）</title><link rel="alternate" type="text/html" href="https://ithorizon.top/posts/atguigu_es_feature_note/"/><id>https://ithorizon.top/posts/atguigu_es_feature_note/</id><updated>2021-04-18T16:25:07+08:00</updated><published>2021-04-18T16:09:33+08:00</published><author><name>Yanbin Lin</name><uri>https://ithorizon.top/</uri><email>1468387317@qq.com</email></author><summary type="html">此文为学习 尚硅谷Web前端ES6教程，涵盖ES6-ES11 记录的笔记 ES6 let变量声明……</summary><content type="html">&lt;blockquote>
+&lt;p>此文为学习 &lt;a href="https://www.bilibili.com/video/BV1uK411H7on">尚硅谷Web前端ES6教程，涵盖ES6-ES11&lt;/a> 记录的笔记&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="es6">ES6&lt;/h3>
+&lt;h4 id="let变量声明">let变量声明&lt;/h4>
+&lt;ul>
+&lt;li>变量不能重复声明&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>let i = 1;
+let i = 2; // error
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>块级作用域&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>{
+let i = 1;
+}
+console.log(i); // error
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>不存在变量提升&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>console.log(i); // error
+let i = 1;
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>不影响作用域链&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>{
+let i = 1;
+function fn() {
+console.log(i); // 1
+}
+fn();
+}
+&lt;/code>&lt;/pre>&lt;h4 id="const声明常量">const声明常量&lt;/h4>
+&lt;ul>
+&lt;li>常量声明时需要赋初始值，一般常量名使用大写&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>const ERROR; // error
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>常量值不能修改&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>const ERROR = &amp;quot;error&amp;quot;;
+ERROR = &amp;quot;&amp;quot;; // error
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>块级作用域（同let）&lt;/li>
+&lt;li>对于数组和对象值的修改，不算对常量的修改&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>const ARR = [&amp;quot;a&amp;quot;, &amp;quot;b&amp;quot;];
+ARR[0] = &amp;quot;c&amp;quot;;
+ARR.push(&amp;quot;d&amp;quot;);
+const OBJ = {
+name: &amp;quot;a&amp;quot;
+}
+OBJ[name] = &amp;quot;b&amp;quot;;
+OBJ.age = 10;
+&lt;/code>&lt;/pre>&lt;h4 id="变量的解构赋值">变量的解构赋值&lt;/h4>
+&lt;ul>
+&lt;li>数组解构&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>let arr = [&amp;quot;a&amp;quot;, &amp;quot;b&amp;quot;];
+const [a, b] = arr;
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>对象解构&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>let obj = {
+name: 'horizon',
+age: 23
+};
+const {name, age} = obj;
+&lt;/code>&lt;/pre>&lt;h4 id="模板字符串">模板字符串&lt;/h4>
+&lt;pre>&lt;code>// 使用 `` 定义模板字符串
+const key = &amp;quot;key&amp;quot;
+const str = `${key}-value`
+&lt;/code>&lt;/pre>&lt;h4 id="对象的简化写法">对象的简化写法&lt;/h4>
+&lt;pre>&lt;code>const name = &amp;quot;horizon&amp;quot;;
+const age = 23;
+const user = {
+name,
+age
+eat() {
+console.log('eat');
+}
+};
+&lt;/code>&lt;/pre>&lt;h4 id="箭头函数">箭头函数&lt;/h4>
+&lt;ul>
+&lt;li>this是静态的。this 始终指向函数声明时所在作用域下的 this 的值&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>function getName() {
+console.log(this.name);
+}
+const getName2 = () =&amp;gt; {
+console.log(this.name);
+}
+window.name = 'horizon';
+getName(); // horizon
+getName2(); // horizon
+const user = {
+name: 'jeson'
+}
+getName.call(user); // jeson
+getName2.call(user); // horizon
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>不能作为构造实例化对象&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>const Persion = (name) =&amp;gt; {
+this.name = name;
+}
+const me = new Persion('horizon'); // error
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>不能使用 arguments 变量&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>const fn = () =&amp;gt; {
+console.log(arguments); // error
+}
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>箭头函数的简写&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>// 1. 当形参有且只有一个时，可以省略小括号
+const fn = n =&amp;gt; {
+return n + n;
+}
+// 2. 当代码体只有一条语句时，可以省略花括号，且如果该语句是返回值的语句，必须省略 return
+const pw = n =&amp;gt; n * n;
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>箭头函数的使用场景&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;ul>
+&lt;li>适合与 this 无关的回调，如定时器、数组的方法回调&lt;/li>
+&lt;li>不适合与 this 有关的回调，如事件回调，对象的方法&lt;/li>
+&lt;/ul>
+&lt;/blockquote>
+&lt;h4 id="函数参数的初始值一般位置要靠后">函数参数的初始值，一般位置要靠后&lt;/h4>
+&lt;ul>
+&lt;li>形参初始值，&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>function incr(a, b = 1) {
+return a + b;
+}
+console.log(incr(10)); // 11
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>与解构赋值结合&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>function getName({name = 'horizon'}) {
+console.log(name);
+}
+getName(); // horizon
+getName({name: 'jeson'}); // jeson
+&lt;/code>&lt;/pre>&lt;h4 id="rest参数">rest参数&lt;/h4>
+&lt;p>rest参数用于获取函数的实参，用来代替 arguments&lt;/p>
+&lt;pre>&lt;code>// arguments是对象
+function output() {
+console.log(arguments);
+}
+// args是数组，必须放在参数的最后一个位置
+const output2 = (...args) {
+console.log(args);
+}
+&lt;/code>&lt;/pre>&lt;h4 id="扩展运算符">扩展运算符&lt;/h4>
+&lt;p>[&amp;hellip;] 扩展运算符能够将【数组】转换为逗号分隔的【参数序列】&lt;/p>
+&lt;pre>&lt;code>function output(a, b) {
+return a + b;
+}
+const arr = [1, 2];
+console.log(output(...arr)); // 3
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>扩展运算符的应用
+&lt;ul>
+&lt;li>数组的合并&lt;/li>
+&lt;li>数组的克隆&lt;/li>
+&lt;li>将伪数组转为真正的数组&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="symbol">Symbol&lt;/h4>
+&lt;p>新的原始数据类型，表示独一无二的值，Symbol的特点：&lt;/p>
+&lt;ul>
+&lt;li>Symbol的值是唯一的，用来解决命名冲突的问题&lt;/li>
+&lt;li>Symbol值不能与其他数据进行运算&lt;/li>
+&lt;li>Symbol定义的对象不能使用 for&amp;hellip;in 循环符，但是可以使用 Reflect.ownKeys 来获取对象的所有键名&lt;/li>
+&lt;/ul>
+&lt;h4 id="迭代器">迭代器&lt;/h4>
+&lt;p>迭代器是一种接口，为各种不同的数据结构提供统一的访问机制，任何数据结构只要部署了 Iterator 接口（对象里的一个属性：Symbol.iterator），就可以完成遍历操作&lt;/p>
+&lt;ul>
+&lt;li>ES6创造了一种新的遍历命令 for&amp;hellip;of 循环，Iterator 接口主要供 for&amp;hellip;of 消费&lt;/li>
+&lt;li>原生具备 Iterator 接口的数据（可用 for&amp;hellip;of 循环）
+&lt;ul>
+&lt;li>Array&lt;/li>
+&lt;li>Arguments&lt;/li>
+&lt;li>Set&lt;/li>
+&lt;li>Map&lt;/li>
+&lt;li>String&lt;/li>
+&lt;li>TypeArray&lt;/li>
+&lt;li>NodeList&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>工作原理
+&lt;ul>
+&lt;li>创建一个指针对象，指向当前数据结构的起始位置&lt;/li>
+&lt;li>第一次调用对象的 next 方法，指针自动指向数据的第一个成员&lt;/li>
+&lt;li>接下来不断调用 next 方法，指针一直往后移动，直到指向最后一个&lt;/li>
+&lt;li>每调用 next 方法返回一个包含 value 和 done 属性的对象&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>const user = {
+name: 'horizon',
+skill: ['java', 'js', 'ts'],
+[Symbol.iterator]() {
+let i = 0;
+return {
+next: () =&amp;gt; {
+if (i &amp;lt; this.skill.length) {
+const result = {
+value: this.skill[i],
+done: false
+}
+i++;
+return result;
+} else {
+return {
+value: undefined,
+done: true
+}
+}
+}
+}
+}
+}
+for (const each of user) {
+console.log(each);
+}
+&lt;/code>&lt;/pre>&lt;h4 id="生成器函数">生成器函数&lt;/h4>
+&lt;p>生成器函数是ES6提供的一种异步编程解决方案，语法行为与传统函数完成不同&lt;/p>
+&lt;ul>
+&lt;li>使用&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>// 加&amp;quot;*&amp;quot;表明是生成器函数
+function * gen() {
+console.log('1'); // code1
+yield '1';
+console.log('2'); // code2
+yield '2';
+}
+let iterator = gen(); // 调用生成器函数返回的是一个迭代器对象
+iterator.next(); // 执行code1
+iterator.next(); // 执行code2
+// 输出 yield 返回的结果
+for (const v of iterator) {
+console.log(v);
+}
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>实例
+模拟获取：用户数据 -&amp;gt; 订单数据 -&amp;gt; 商品数据&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>// 调用生成器函数
+let iterator = gen();
+iterator.next();
+function getUsers() {
+setTimeout(() =&amp;gt; {
+let data = &amp;quot;用户数据&amp;quot;;
+iterator.next(data);
+}, 1000)
+}
+function getOrders() {
+setTimeout(() =&amp;gt; {
+let data = &amp;quot;订单数据&amp;quot;;
+// 第二次调用 next 传入的实参将作为第一个 yield 语句返回的结果
+iterator.next(data);
+}, 1000)
+}
+function getProducts() {
+setTimeout(() =&amp;gt; {
+let data = &amp;quot;商品数据&amp;quot;;
+iterator.next(data);
+}, 1000)
+}
+function * gen() {
+const users = yield getUsers();
+const orders = yield getOrders();
+const products = yield getProducts();
+}
+&lt;/code>&lt;/pre>&lt;h4 id="promise">Promise&lt;/h4>
+&lt;p>Promise是ES6引入的异步编程的新解决方案，语法上Promise是一个构造函数，用来封装异步操作并可以获取成功或失败的结果。&lt;/p>
+&lt;h4 id="set">Set&lt;/h4>
+&lt;p>常用API&lt;/p>
+&lt;ul>
+&lt;li>add&lt;/li>
+&lt;li>delete&lt;/li>
+&lt;li>has&lt;/li>
+&lt;li>clear&lt;/li>
+&lt;li>size（属性）&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>const set = new Set([1, 2, 3, 1]);
+for (const num of set) {
+console.log(num);
+}
+&lt;/code>&lt;/pre>&lt;h4 id="map">Map&lt;/h4>
+&lt;p>常用API&lt;/p>
+&lt;ul>
+&lt;li>set&lt;/li>
+&lt;li>delete&lt;/li>
+&lt;li>get&lt;/li>
+&lt;li>clear&lt;/li>
+&lt;li>size（属性）&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>let m = new Map();
+m.set('name', 'horizon');
+for (const o of m) {
+console.log(o); // 输出长度为2的数组，第一个元素为key，第二个元素为value
+}
+&lt;/code>&lt;/pre>&lt;h4 id="class类">Class类&lt;/h4>
+&lt;p>通过class关键字可以定义类，基本上ES6的class可以看做是一种语法糖，它的绝大部分功能ES5都可以做到，新的class写法只是让对象原型的写法更加清晰、更像面向对象编程的语法而已。&lt;/p>
+&lt;ul>
+&lt;li>class声明类&lt;/li>
+&lt;li>constructor定义构造函数初始化&lt;/li>
+&lt;li>extends继承父类&lt;/li>
+&lt;li>super调用父类构造方法&lt;/li>
+&lt;li>static定义静态方法和属性&lt;/li>
+&lt;li>父类方法可以重写&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>// ES5实现类的写法
+function Person(name, age) {
+this.name = name;
+this.age = age;
+}
+Person.prototype.eat = function() {
+console.log('eat');
+}
+// ES6实现类的写法
+class Person {
+constructor(name, age) {
+this.name = name;
+this.age = age;
+}
+eat() {
+console.log('eat');
+}
+}
+Person person = new Person('horizon', 23);
+person.call();
+// ES5实现继承
+function Phone(brand, price) {
+this.brand = brand;
+this.price = price;
+}
+Phone.prototype.call = function() {
+console.log('I can call');
+}
+function SmartPhone(brand, price, color) {
+Phone.call(this, brand, price);
+this.color = color
+}
+// 设置子级构造函数的原型
+SmartPhone.prototype = new Phone;
+SmartPhone.prototype.contructor = SmartPhone
+SmartPhone.prototype.photo = function() {
+console.log('I can photo');
+}
+// ES6实现继承
+class Phone {
+constructor(brand, price) {
+this.brand = brand;
+this.price= price;
+}
+call() {
+console.log('I can call');
+}
+}
+class SmartPhone extends Phone {
+constructor(brand, price, color) {
+super(brand, price);
+this.color = color;
+}
+photo() {
+console.log('I can photo');
+}
+}
+&lt;/code>&lt;/pre>&lt;h4 id="数值扩展">数值扩展&lt;/h4>
+&lt;ul>
+&lt;li>Math.EPSILON：js表示的最小精度&lt;/li>
+&lt;li>二进制和八进制&lt;/li>
+&lt;li>Number.isFinite：检测一个数值是否为有限数&lt;/li>
+&lt;li>Number.isNaN：检测一个数值是否为NaN&lt;/li>
+&lt;li>Number.isInteger：判断一个数是否为整数&lt;/li>
+&lt;li>Math.trunc：将数字的小数部分抹掉&lt;/li>
+&lt;li>Math.sign：判断一个数是正数、零还是负数&lt;/li>
+&lt;/ul>
+&lt;h4 id="对象方法扩展">对象方法扩展&lt;/h4>
+&lt;ul>
+&lt;li>Object.is：判断两个值是否相等&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>console.log(Object.is(1, 1)); // true
+console.log(NaN === NaN); // false
+console.log(Object.is(NaN, NaN)); // true
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>Object.assign：对象的合并&lt;/li>
+&lt;li>Object.setPropertyOf、Object.getPropertyOf：设置原型对象&lt;/li>
+&lt;/ul>
+&lt;h4 id="模块化">模块化&lt;/h4>
+&lt;p>模块化是指将一个大的程序文件，拆分成许多小的文件，然后将小文件组合起来&lt;/p>
+&lt;ul>
+&lt;li>模块化的好处
+&lt;ul>
+&lt;li>防止命名冲突&lt;/li>
+&lt;li>代码复用&lt;/li>
+&lt;li>高维护性&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>模块化规范产品
+&lt;ul>
+&lt;li>CommonJS =&amp;gt; NodeJS、Browserify&lt;/li>
+&lt;li>AMD =&amp;gt; requireJS&lt;/li>
+&lt;li>CMD =&amp;gt; seaJS&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>ES6模块化语法
+&lt;ul>
+&lt;li>export命令用于规定模块的对外接口&lt;/li>
+&lt;li>import命令用于输入其他模块提供的功能&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="es7">ES7&lt;/h3>
+&lt;h4 id="arrayprototypeincludes">Array.prototype.includes&lt;/h4>
+&lt;p>includes 方法用来检测数组中是否包含某个元素，返回布尔类型值&lt;/p>
+&lt;h4 id="指数操作符">指数操作符&lt;/h4>
+&lt;p>在ES7中引入了指数运算符[**]，用来实现幂运算，功能与Math.pow结果相同&lt;/p>
+&lt;h3 id="es8">ES8&lt;/h3>
+&lt;h4 id="async和await">async和await&lt;/h4>
+&lt;p>async和await两种语法结合可以让异步代码像同步代码一样&lt;/p>
+&lt;h5 id="async函数">async函数&lt;/h5>
+&lt;ul>
+&lt;li>async函数的返回值为Promise对象&lt;/li>
+&lt;li>Promise对象的结果由async函数执行的返回值决定&lt;/li>
+&lt;/ul>
+&lt;h5 id="await表达式">await表达式&lt;/h5>
+&lt;ul>
+&lt;li>await必须写在async函数中&lt;/li>
+&lt;li>await右侧的表达式一般为Promise对象&lt;/li>
+&lt;li>await返回的是Promise成功的值&lt;/li>
+&lt;li>await的Promise失败了，就会抛出异常，需要通过try&amp;hellip;catch捕获处理&lt;/li>
+&lt;/ul>
+&lt;h4 id="对象方法扩展-1">对象方法扩展&lt;/h4>
+&lt;ul>
+&lt;li>Object.values()：返回一个给定对象的所有可枚举属性值的数组&lt;/li>
+&lt;li>Object.entries()：返回一个给定对象自身可遍历属性[key,value]的数组&lt;/li>
+&lt;li>Object.getOwnPropertyDescriptors()：返回指定对象所有自身属性的描述对象&lt;/li>
+&lt;/ul>
+&lt;h3 id="es9">ES9&lt;/h3>
+&lt;h4 id="扩展运算符与rest参数">扩展运算符与rest参数&lt;/h4>
+&lt;p>扩展运算符与rest参数在ES6中已引入，但只针对数组，在ES9中为对象提供了像数组一样的扩展运算符与rest参数&lt;/p>
+&lt;h4 id="正则扩展">正则扩展&lt;/h4>
+&lt;ul>
+&lt;li>命名捕获分组（?&lt;name>）&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>let str = '&amp;lt;a href=&amp;quot;http://www.baidu.com&amp;quot;&amp;gt;百度&amp;lt;/a&amp;gt;';
+const reg = /&amp;lt;a href=&amp;quot;(?&amp;lt;url&amp;gt;.*)&amp;quot;&amp;gt;(?&amp;lt;text&amp;gt;.*)&amp;lt;\/a&amp;gt;/;
+const result = reg.exec(str)
+console.log(result.groups.url);
+console.log(result.groups.text);
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>反向断言（?&amp;lt;=）&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>let str = &amp;quot;ES110哔哔120哩哩&amp;quot;;
+// 正向断言
+const reg = /\d+(?=哩)/;
+console.log(reg.exec(str)); // 120
+// 反向断言
+const reg2 = /(?&amp;lt;=哔)\d+/;
+console.log(reg2.exec(str)); // 120
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>dotAll模式&lt;br>
+正则的dot(.)匹配除换行符以外的任意一个字符，dotAll模式下dot(.)将可以匹配任意字符（包括换行符）。&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>// 正则表达式的最后加了s符号
+const reg = /.*/s;
+&lt;/code>&lt;/pre>&lt;h3 id="es10">ES10&lt;/h3>
+&lt;h4 id="对象扩展方法objectfromentries">对象扩展方法Object.fromEntries&lt;/h4>
+&lt;p>接收一个二维数组或Map将其转换为对象，与ES8的Object.entries方法互为逆运算&lt;/p>
+&lt;pre>&lt;code>const res = Object.fromEntries([
+['name', 'horizon']
+])
+console.log(res); // {name: 'horizon'}
+const m = new Map();
+m.set('name', 'horizon');
+const obj = Object.fromEntries(m);
+console.log(obj); // {name: 'horizon'}
+&lt;/code>&lt;/pre>&lt;h4 id="字符串扩展方法trimstart与trimend">字符串扩展方法trimStart与trimEnd&lt;/h4>
+&lt;ul>
+&lt;li>trimStart：清除字符串左侧空白字符&lt;/li>
+&lt;li>trimEnd：清除字符串右侧空白字符&lt;/li>
+&lt;/ul>
+&lt;h4 id="数组扩展方法flat与flatmap">数组扩展方法flat与flatMap&lt;/h4>
+&lt;ul>
+&lt;li>flat：将多维数组转化为低维数组，参数可传入需要降几维，默认值为1&lt;/li>
+&lt;li>flatMap：将map的结果进行维度降低&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>const array = [1,2,[3,4,[5,6]]];
+console.log(array.flat()); // [1,2,3,4,[5,6]]
+console.log(array.flat(2)); // [1,2,3,4,5,6]
+const arr = [1,2,3,4,5];
+const newArr = arr.flatMap(each =&amp;gt; [each * 10]); // [10,20,30,40,50]
+&lt;/code>&lt;/pre>&lt;h4 id="symbolprototypedescription">Symbol.prototype.description&lt;/h4>
+&lt;pre>&lt;code>const s = Symbol('horizon');
+console.log(Symbol.description); // horizon
+&lt;/code>&lt;/pre>&lt;h3 id="es11">ES11&lt;/h3>
+&lt;h4 id="私有属性">私有属性&lt;/h4>
+&lt;pre>&lt;code>class Person {
+// 公有属性
+name;
+// 私有属性
+#age;
+constructor(name, age) {
+this.name = name;
+this.#age = age;
+}
+}
+const person = new Person('horizon', 23);
+console.log(person.name); // horizon
+console.log(person.#age); // error
+&lt;/code>&lt;/pre>&lt;h4 id="promiseallsettled">Promise.allSettled&lt;/h4>
+&lt;p>接收一个Promise数组，不管Promise数组内的Promise是否成功或失败，allSettled返回的Promise都是成功状态的，这与all不同。&lt;/p>
+&lt;h4 id="字符串扩展stringmatchall">字符串扩展String.matchAll&lt;/h4>
+&lt;p>将所有的匹配结果取出来，返回一个可迭代的对象，可用for&amp;hellip;of循环遍历&lt;/p>
+&lt;h4 id="可选链操作符">可选链操作符（?.）&lt;/h4>
+&lt;pre>&lt;code>function main(config) {
+// const host = config &amp;amp;&amp;amp; config.db &amp;amp;&amp;amp; config.db.host;
+const host = config?.db?.host;
+}
+const config = {
+db: {
+host: '127.0.0.1'
+}
+}
+&lt;/code>&lt;/pre>&lt;h4 id="动态import">动态import&lt;/h4>
+&lt;p>使用 import('/path') 动态导入模块，返回一个Promise对象&lt;/p>
+&lt;h4 id="bigint类型">BigInt类型&lt;/h4>
+&lt;pre>&lt;code>const num1 = 123n;
+const num2 = BigInt(123);
+&lt;/code>&lt;/pre>&lt;h4 id="绝对全局对象globalthis">绝对全局对象globalThis&lt;/h4></content><category scheme="https://ithorizon.top/posts/" term="posts" label="posts"/><category scheme="https://ithorizon.top/categories/%E5%89%8D%E7%AB%AF/" term="前端" label="前端"/><category scheme="https://ithorizon.top/tags/es6/" term="ES6" label="ES6"/><category scheme="https://ithorizon.top/tags/es%E6%96%B0%E7%89%B9%E6%80%A7/" term="ES新特性" label="ES新特性"/></entry><entry><title type="text">Hugo + Github Pages搭建个人博客</title><link rel="alternate" type="text/html" href="https://ithorizon.top/posts/hugo_start/"/><id>https://ithorizon.top/posts/hugo_start/</id><updated>2021-04-18T16:18:52+08:00</updated><published>2021-03-03T13:11:51+08:00</published><author><name>Yanbin Lin</name><uri>https://ithorizon.top/</uri><email>1468387317@qq.com</email></author><summary type="html">下载Hugo 二进制安装 1. 上github（https://github.com/goh……</summary><content type="html">&lt;h4 id="下载hugo">下载Hugo&lt;/h4>
+&lt;h5 id="二进制安装">二进制安装&lt;/h5>
+&lt;pre>&lt;code>1. 上github（https://github.com/gohugoio/hugo/releases）下载对应的压缩包，然后进行解压，再将目录配置到环境变量中
+2. 执行：hugo version，验证是否安装成功
+&lt;/code>&lt;/pre>&lt;h5 id="源码安装">源码安装&lt;/h5>
+&lt;pre>&lt;code>1. 安装Git（https://git-scm.com/downloads）
+2. 安装Golang（https://golang.org/dl/）
+3. 安装Hugo
+git clone https://github.com/gohugoio/hugo.git
+cd hugo
+go install
+PS：如果需要下载支持编译SASS的版本，需要为clone时加上--tags extended参数，
+安装go模块由go install改为执行：CGO_ENABLED=1 go install --tags extended，
+如果安装go模块时报错：exec: &amp;quot;gcc&amp;quot;: executable file not found in %PATH%，可按参考文献1做法安装gcc后再重试
+&lt;/code>&lt;/pre>&lt;p>PS：如果按源码的方式安装，后续执行hugo命令可能需要在git的客户端内才能执行，在windows cmd客户端内执行可能会报一下错误
+&lt;img src="https://ithorizon.top/images/hugo_start-hugo_exe_error.png" alt="Windows窗口执行错误">&lt;/p>
+&lt;h4 id="创建项目">创建项目&lt;/h4>
+&lt;pre>&lt;code># 生成项目
+hugo new site &amp;quot;项目名&amp;quot;
+# 生成博文
+hogo new posts/xxx.md
+&lt;/code>&lt;/pre>&lt;h4 id="安装主题">安装主题&lt;/h4>
+&lt;p>官网主题库：&lt;a href="https://themes.gohugo.io/">Hugo Themes&lt;/a>&lt;/p>
+&lt;pre>&lt;code># 引入主题
+git submodule add &amp;lt;主题仓库地址&amp;gt; themes/&amp;lt;主题名&amp;gt;
+&lt;/code>&lt;/pre>&lt;h4 id="修改配置">修改配置&lt;/h4>
+&lt;p>一般主题都有提供一份config.toml或config.yml配置，将其拷贝到项目的根目录并进行修改即可，如果使用Github Pages发布的话，需要在config.toml内添加：publishDir = docs 配置&lt;/p>
+&lt;h4 id="生成静态站点的目录">生成静态站点的目录&lt;/h4>
+&lt;pre>&lt;code># 根目录下执行hugo命令生成静态站点的目录，默认为 public 目录
+hugo
+&lt;/code>&lt;/pre>&lt;h4 id="配置github-pages">配置Github Pages&lt;/h4>
+&lt;p>在仓库的Settings -&amp;gt; Options下方找到Github Pages配置，配置source为以上生成的博客文件夹
+&lt;img src="https://ithorizon.top/images/hugo_start-github_pages_config.png" alt="GitHub Pages配置">&lt;/p>
+&lt;h4 id="参考文献">参考文献&lt;/h4>
+&lt;ul>
+&lt;li>&lt;a href="https://www.jianshu.com/p/c38483c30fb7">golang 编译cgo模块exec: &amp;ldquo;gcc&amp;rdquo;: executable file not found in %PATH%&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://jsonbruce.com/posts/userguide/">Hugo 和 GitHub Pages 使用指南&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://sspai.com/post/59904">浅谈我为什么从 HEXO 迁移到 HUGO&lt;/a>&lt;/li>
+&lt;/ul></content><category scheme="https://ithorizon.top/posts/" term="posts" label="posts"/><category scheme="https://ithorizon.top/categories/%E9%9D%99%E6%80%81%E7%BD%91%E7%AB%99/" term="静态网站" label="静态网站"/><category scheme="https://ithorizon.top/tags/hugo/" term="Hugo" label="Hugo"/><category scheme="https://ithorizon.top/tags/%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/" term="搭建个人博客" label="搭建个人博客"/></entry></feed>
