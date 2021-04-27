@@ -28,7 +28,7 @@ pluralizeListTitles = false
 summaryLength = 42
 
 # Enable Emoji emoticons support?
-enableEmoji = false
+enableEmoji = true
 
 # Text to display for footnote return links
 footnoteReturnLinkContents = "↩"
@@ -358,7 +358,7 @@ uglyURLs = false
     # ATTENTION: keep this format, change
     #            the number
 
-    #siteTwitter = "linyanbin"
+    #siteTwitter = "linyanbin98"
     # Note: used for Twitter Cards
 
 
@@ -603,7 +603,7 @@ uglyURLs = false
     # Note: render only in production
     #       environment
 
-    enableServiceWorker = false
+    enableServiceWorker = true
 
 
     ######################################
