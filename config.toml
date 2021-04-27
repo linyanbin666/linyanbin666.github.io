@@ -1,7 +1,7 @@
 ##########################################
 # Site Settings
 
-baseURL = "https://linyanbin666.github.io/"
+baseURL = "https://ithorizon.top/"
 title = "原生菜鸟"
 languageCode = "zh-CN"
 hasCJKLanguage = true
@@ -105,7 +105,7 @@ uglyURLs = false
     # Avatar
     avatar = "/icons/apple-touch-icon.png"
     # Personal website, default: baseURL
-    website = "https://linyanbin666.github.io/"
+    website = "https://ithorizon.top/"
     # Twitter
     #twitter = "linyanbin98"
 
