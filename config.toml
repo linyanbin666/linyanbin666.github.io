@@ -6,7 +6,7 @@ title = "原生菜鸟"
 languageCode = "zh-CN"
 hasCJKLanguage = true
 # Copyright information (Markdown supported)
-# copyright = "[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en)"
+copyright = "在保留本文作者及本文链接的前提下，非商业用途随意转载分享"
 
 # Name of theme
 theme = "meme"
@@ -735,7 +735,7 @@ uglyURLs = false
     #            supported
 
     # The content width of the post
-    postWidth = 36
+    postWidth = 42
     # Note: you can leave it empty("") to
     #       fallback to the default value: 42
     #       Unit: em
@@ -1019,7 +1019,7 @@ uglyURLs = false
     ######################################
     ## Drop Cap
 
-    enableDropCap = true
+    enableDropCap = false
     # Note: *global settings*
     #       `dropCap` in post’s Front Matter
     #       has a higher priority than here
@@ -1041,7 +1041,7 @@ uglyURLs = false
     ######################################
     ## Small Caps
 
-    enableSmallCaps = true
+    enableSmallCaps = false
     # Note: apply to headings & post toc
     #       title only
     #       *global settings*
@@ -1067,7 +1067,7 @@ uglyURLs = false
 
     enablePostCopyright = true
 
-    displayPostCopyright = true
+    displayPostCopyright = false
     # Note: *global settings*
     #       `displayCopyright` in post’s Front Matter
     #       has a higher priority than here
@@ -1076,9 +1076,9 @@ uglyURLs = false
     ######################################
     # Post Updated Badge
 
-    enablePostUpdatedBadge = false
+    enablePostUpdatedBadge = true
 
-    displayUpdatedBadge = true
+    displayUpdatedBadge = false
     # Note: *global settings*
     #       `badge` in post’s Front Matter
     #       has a higher priority than here
@@ -1091,7 +1091,7 @@ uglyURLs = false
     ######################################
     # Post Gitinfo
 
-    enablePostGitInfo = false
+    enablePostGitInfo = true
 
     displayPostGitInfo = false
     # Note: *global settings*
