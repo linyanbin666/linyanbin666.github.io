@@ -12,8 +12,6 @@ title: 推荐工程-特征平台
 
 
 
-[table_of_contents is not supported]
-
 # 背景
 
 在推荐业务场景日益增多的情况下，推荐所需要的特征也在不断增多，现有的特征使用情况逐渐暴露了以下使用问题：
@@ -102,19 +100,19 @@ title: 推荐工程-特征平台
 
 	- 单表离线特征：hash结构，key为物品id，field为离线特征表id，value为所有特征列拼接的值（colConfigId\001colValue\001colValue，其中colConfigId为列配置记录id，colValue为列值，colValue为null时用\002填充，采用Snappy压缩value以节省空间）
 
-	![Redis%E7%A6%BB%E7%BA%BF%E7%89%B9%E5%BE%81%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/4c207e9e-9670-489b-a0ed-94ef9c997b68/Redis%E7%A6%BB%E7%BA%BF%E7%89%B9%E5%BE%81%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220313%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220313T134454Z&X-Amz-Expires=3600&X-Amz-Signature=1c35e86c16c622229b8af27f38c4a929f6dae4312a3d50e7294416c2859d0d69&X-Amz-SignedHeaders=host&x-id=GetObject)
+	![Redis%E7%A6%BB%E7%BA%BF%E7%89%B9%E5%BE%81%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/4c207e9e-9670-489b-a0ed-94ef9c997b68/Redis%E7%A6%BB%E7%BA%BF%E7%89%B9%E5%BE%81%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220313%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220313T141517Z&X-Amz-Expires=3600&X-Amz-Signature=1be64954065518a73e8c044fdf155ba004656c5463c783b0b99aae164024525c&X-Amz-SignedHeaders=host&x-id=GetObject)
 
 	- 交叉表离线特征：hash结构，key为物品id，field为交叉物品id，value为所有特征列拼接的值（colConfigId\001colValue\001colValue，其中colConfigId为列配置记录id，colValue为列值，colValue为null时用\002填充，采用Snappy压缩value以节省空间）
 
-	![redis%E5%AE%9E%E6%97%B6%E7%89%B9%E5%BE%81%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/62d081ec-6eed-4d99-81ce-52473cc03ad7/redis%E5%AE%9E%E6%97%B6%E7%89%B9%E5%BE%81%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220313%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220313T134454Z&X-Amz-Expires=3600&X-Amz-Signature=bc31b1bc272af3a85e039b09a0f67674a31586f0eec7494f4ad70899e15d33e3&X-Amz-SignedHeaders=host&x-id=GetObject)
+	![redis%E5%AE%9E%E6%97%B6%E7%89%B9%E5%BE%81%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/62d081ec-6eed-4d99-81ce-52473cc03ad7/redis%E5%AE%9E%E6%97%B6%E7%89%B9%E5%BE%81%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220313%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220313T141517Z&X-Amz-Expires=3600&X-Amz-Signature=3300649ced7953625d99e5b52265d00e1cb1670cbd321450fc736c345d03dc01&X-Amz-SignedHeaders=host&x-id=GetObject)
 
 	- 单表实时特征：hash结构，key为物品id_rt（_rt为后缀字符串，与离线特征区分），field为实时字段名，value为实时字段值
 
-	![redis%E5%AE%9E%E6%97%B6%E7%89%B9%E5%BE%81%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/04a7e7df-09a9-4342-a0e8-f86463ba7ea2/redis%E5%AE%9E%E6%97%B6%E7%89%B9%E5%BE%81%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220313%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220313T134454Z&X-Amz-Expires=3600&X-Amz-Signature=9dfb34372560eed11ced516b39b7df7b7a6d9ac60c15523cc2687683feb817bf&X-Amz-SignedHeaders=host&x-id=GetObject)
+	![redis%E5%AE%9E%E6%97%B6%E7%89%B9%E5%BE%81%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/04a7e7df-09a9-4342-a0e8-f86463ba7ea2/redis%E5%AE%9E%E6%97%B6%E7%89%B9%E5%BE%81%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220313%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220313T141517Z&X-Amz-Expires=3600&X-Amz-Signature=591df9fd433012b9f5f6697f46ffedaf0e8dc747a27434cd4eef92f9ad29244e&X-Amz-SignedHeaders=host&x-id=GetObject)
 
 	- 交叉表实时特征：hash结构，key为物品id_rt（_rt为后缀字符串，与离线特征区分），field为交叉物品id，value为实时字段key-value json串
 
-	![redis%E5%AE%9E%E6%97%B6%E4%BA%A4%E5%8F%89%E8%A1%A8%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/46161510-c827-49f6-bb92-52814b717cd3/redis%E5%AE%9E%E6%97%B6%E4%BA%A4%E5%8F%89%E8%A1%A8%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220313%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220313T134454Z&X-Amz-Expires=3600&X-Amz-Signature=fddd5c9d4879457338d1b43af38ba16585b0fe2290a3eba9c3f92ae454670210&X-Amz-SignedHeaders=host&x-id=GetObject)
+	![redis%E5%AE%9E%E6%97%B6%E4%BA%A4%E5%8F%89%E8%A1%A8%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/46161510-c827-49f6-bb92-52814b717cd3/redis%E5%AE%9E%E6%97%B6%E4%BA%A4%E5%8F%89%E8%A1%A8%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220313%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220313T141517Z&X-Amz-Expires=3600&X-Amz-Signature=6c5158998746eeb700130f06dfe86dadd58ccd37d689d02c99afdaedc4fc2258&X-Amz-SignedHeaders=host&x-id=GetObject)
 
 > PS：离线特征过期时间为7天、实时特征过期时间为3天，具体根据实际业务场景设置
 
@@ -198,11 +196,7 @@ title: 推荐工程-特征平台
 
 ![Untitled.png](https://raw.githubusercontent.com/linyanbin666/pic/master/notionimg/8b/8c/8b8cc0f422bd74eb64f16d65f688e7ab.png)
 
-特征集创建界面
-
 ![Untitled.png](https://raw.githubusercontent.com/linyanbin666/pic/master/notionimg/10/db/10db7cd02f735de3fa3ad277a34dcab1.png)
-
-特征集列表界面
 
 # 展望未来
 
