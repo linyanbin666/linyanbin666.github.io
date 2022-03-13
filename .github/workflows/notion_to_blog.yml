@@ -17,7 +17,7 @@ jobs:
         token: ${{ secrets.CHECKOUT_TOKEN }}
 
     - name: Markdown From Notion
-      uses: akkuman/notion_to_github_blog@master
+      uses: linyanbin666/notion_to_github_blog@master
       with:
         notion_token: ${{ secrets.NOTION_TOKEN }}
         notion_database_id: ${{ secrets.NOTION_DATABASE_ID }}
