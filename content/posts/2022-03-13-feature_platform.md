@@ -12,7 +12,7 @@ title: 推荐工程-特征平台
 
 
 
-## 背景
+# 背景
 
 在推荐业务场景日益增多的情况下，推荐所需要的特征也在不断增多，现有的特征使用情况逐渐暴露了以下使用问题：
 
@@ -28,15 +28,13 @@ title: 推荐工程-特征平台
 
 - 稳定可靠：降低特征服务读取延时
 
-## 平台架构
+# 平台架构
 
 ![%E7%89%B9%E5%BE%81%E5%B9%B3%E5%8F%B0.png](https://raw.githubusercontent.com/linyanbin666/pic/master/notionimg/41/10/4110ebf702a481d7df0f559466ad66bc.png)
 
-特征平台架构
-
 架构图由下向上分别是：
 
-**存储层**
+## **存储层**
 
 - Kafka：用于接收实时特征
 
@@ -46,13 +44,13 @@ title: 推荐工程-特征平台
 
 - Rocksdb：用于存放物品特征（离线+实时），替换Redis中存储的物品特征
 
-**计算层**
+## **计算层**
 
 - Spark Streaming、Flink：用于生产实时特征
 
 - Spark SQL：用于同步离线特征
 
-**业务处理层**
+## **业务处理层**
 
 - 实时处理程序：接收Kafka实时特征，写入Redis
 
@@ -60,7 +58,7 @@ title: 推荐工程-特征平台
 
 - 索引处理程序：接收Kafka实时特征 + 同步Hive离线特征，写入Rocksdb
 
-**接入层**
+## **接入层**
 
 - Admin：特征管理界面，提供离线/实时特征注册、特征集配置、特征查询功能
 
@@ -68,19 +66,17 @@ title: 推荐工程-特征平台
 
 ## 核心功能
 
-### 特征生产
+## 特征生产
 
-**离线特征**
+### **离线特征**
 
 目前在离线特征生产方面工程同学暂时还未有过多的介入，这方面的特征大都是算法同学通过Hive SQL计算提取出来，工程同学暂仅限于提供一些UDF函数支持。算法同学在这一过程最终会生产出多张Hive特征表，供后续流程使用。
 
-**实时特征**
+### **实时特征**
 
 对于实时特征方面，工程同学尝试利用Spark Streaming结合Spark SQL定义一个规范处理流程（统一输入+SQL+统一输出），让算法同学可以在界面上编写SQL来生产实时特征，同时工程同学可以在流程内加入一些监控、告警等辅助功能，下面是Spark Streaming程序定义的界面：
 
 ![Untitled.png](https://raw.githubusercontent.com/linyanbin666/pic/master/notionimg/58/25/58252c8211eda29f89285bdf28107f94.png)
-
-Spark Streaming程序定义
 
 - 基本信息：填写Spark Streaming程序的一些基础信息
 
@@ -92,75 +88,107 @@ Spark Streaming程序定义
 
 功能上线后陆续接入了几个生产程序，整体效果还是可以的，相比之前每个算法同学都自己编写和维护自己的Spark Streaming程序，使用这种方式明显减少了算法同学的开发以及维护成本。
 
-### 特征存储
+## 特征存储
 
- | 存储方式 | 特征类型 | **特征版本** | **特征序列化** | **优缺点** | 
- | ---- | ---- | ---- | ---- | ---- | 
- | 基于Redis | 离线+实时 | 单版本：用新数据直接覆盖旧数据，实现简单，对物理存储占用较少，但在数据异常时无法快速回滚 | 1. 存储单表离线特征：
-- hash结构
-  - key: 物品id
-  - field: 离线特征表id
-  - value: 列值（colConfigId\001colValue\001colValue），colConfigId为列配置记录id，colValue为列值，colValue为null时用\002填充（采用Snappy压缩节省空间）
-2. 存储交叉表离线特征：
-- hash结构
-  - key：物品id
-  - field：交叉物品id
-  - value: 列值（colConfigId\001colValue\001colValue），colConfigId为列配置记录id，colValue为列值，colValue为null时用\002填充（采用Snappy压缩节省空间）
-3. 存储单表实时特征：
-- hash结构
-  - key：物品id_rt
-  - field：实时字段名
-  - value：实时字段值
-4. 存储交叉实时特征：
-- hash结构
-  - key：物品id_rt
-  - field：交叉物品id
-  - value: key-value json字符串
-PS：离线特征过期时间为7天、实时特征过期时间为3天 | 1. 优点：
-- 实现简单
-- 性能良好
-2. 缺点：
-- 用特殊值拼接各列值存在风险
-- 不支持异常快速回滚
-- 量大时更新较慢（控制写入速率）
-- 内存占用较多 | 
- | 基于Rocksdb | 离线+实时 | 多版本：每一份数据对应特定版本，虽然物理存储占用较多，但在数据异常时可通过版本切换的方式快速回滚
+### 基于Redis存储
 
-PS：离线按天生成版本，全实时/离线+全实时按每6小时生成一个版本 | 1. KV存储，Value使用自定义的序列化方式以二进制的方式紧凑存储，以下为Value的存储格式：
--  col_1_val + col_2_val + ... + col_n_val（根据Schema定义的字段拼接字段值，空字段用一个byte标识）
-2. 支持多种数据类型的序列化：
-  - （string）len + val_bytes
-  - （list）len + val_1_type + val_1 + val_2_type + val_2 + ... + val_n_type + val_n
-  - （number）val_bytes
-  - （map）len + map_val_type + map_val_1 + map_val_2 + ... + map_val_n
-  - （map_val）str_key + val | 1. 优点：
-- 内存占用较少
-- 性能良好
-- 多版本支持异常回滚
-2. 缺点：
-- 实现较复杂，需要进行调优 | 
+- **特征类型：**离线+实时
 
-**特征存储实现方式**
+- **特征版本：**单版本，用新数据直接覆盖旧数据，实现简单，对物理存储占用较少，但在数据异常时无法快速回滚
 
-1. 基于`Redis`存储的特征实现方式
+- **特征序列化**
 
-- 离线：利用`SparkSQL`读取`Hive`表数据通过`Redis Pipline`录入到`Redis`
+	- 单表离线特征：hash结构，key为物品id，field为离线特征表id，value为所有特征列拼接的值（colConfigId\001colValue\001colValue，其中colConfigId为列配置记录id，colValue为列值，colValue为null时用\002填充，采用Snappy压缩value以节省空间）
 
-- 实时：利用`Spark Streaming`生成实时特征发往`Kafka`，消费`Kafka`数据录入到`Redis`
+	![Redis%E7%A6%BB%E7%BA%BF%E7%89%B9%E5%BE%81%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/4c207e9e-9670-489b-a0ed-94ef9c997b68/Redis%E7%A6%BB%E7%BA%BF%E7%89%B9%E5%BE%81%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220313%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220313T132616Z&X-Amz-Expires=3600&X-Amz-Signature=776afae1f62636de2a26d89437cfad17a59dd189df987a2e9b52ac702a7ecb36&X-Amz-SignedHeaders=host&x-id=GetObject)
+
+	- 交叉表离线特征：hash结构，key为物品id，field为交叉物品id，value为所有特征列拼接的值（colConfigId\001colValue\001colValue，其中colConfigId为列配置记录id，colValue为列值，colValue为null时用\002填充，采用Snappy压缩value以节省空间）
+
+	![redis%E5%AE%9E%E6%97%B6%E7%89%B9%E5%BE%81%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/62d081ec-6eed-4d99-81ce-52473cc03ad7/redis%E5%AE%9E%E6%97%B6%E7%89%B9%E5%BE%81%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220313%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220313T132616Z&X-Amz-Expires=3600&X-Amz-Signature=d322a97fa5d32e7852ef1e27b5ce7b77d3287685015c6d63c75e18775fad3b3c&X-Amz-SignedHeaders=host&x-id=GetObject)
+
+	- 单表实时特征：hash结构，key为物品id_rt（_rt为后缀字符串，与离线特征区分），field为实时字段名，value为实时字段值
+
+	![redis%E5%AE%9E%E6%97%B6%E7%89%B9%E5%BE%81%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/04a7e7df-09a9-4342-a0e8-f86463ba7ea2/redis%E5%AE%9E%E6%97%B6%E7%89%B9%E5%BE%81%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220313%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220313T132616Z&X-Amz-Expires=3600&X-Amz-Signature=51e0fccb1e9b80280e816874862c23bd3ca9b4f9f281d1f41ca7c25dabb1fe07&X-Amz-SignedHeaders=host&x-id=GetObject)
+
+	- 交叉表实时特征：hash结构，key为物品id_rt（_rt为后缀字符串，与离线特征区分），field为交叉物品id，value为实时字段key-value json串
+
+	![redis%E5%AE%9E%E6%97%B6%E4%BA%A4%E5%8F%89%E8%A1%A8%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/46161510-c827-49f6-bb92-52814b717cd3/redis%E5%AE%9E%E6%97%B6%E4%BA%A4%E5%8F%89%E8%A1%A8%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220313%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220313T132616Z&X-Amz-Expires=3600&X-Amz-Signature=57f7cf5e9298bcbbdb528fd00d8596c8041d510e0ecf0982b47ea1d100489695&X-Amz-SignedHeaders=host&x-id=GetObject)
+
+> PS：离线特征过期时间为7天、实时特征过期时间为3天，具体根据实际业务场景设置
+
+- **实现方式**
+
+	- 离线：利用`SparkSQL`读取`Hive`表数据通过`Redis Pipline`录入到`Redis`
+
+	- 实时：利用`Spark Streaming`生成实时特征发往`Kafka`，消费`Kafka`数据录入到`Redis`
 
 ![Untitled.png](https://raw.githubusercontent.com/linyanbin666/pic/master/notionimg/04/cd/04cdb8602a957c826eda308f715c9584.png)
 
-基于Redis存储实现流程
+- **优缺点**
 
-1. 基于`Rocksdb`存储的特征实现方式
+	- 优点
 
-- 离线：由`BuildService`读取`Hive Metadata`并解析`Hdfs File`数据生成`Key-Value`录入到`Rocksdb Table`，录入完成后将`Rocksdb Table`在本地对应的文件打包压缩上传到`Hdfs`上，最终由`OnlineService`下载到本地并在内存中构建`Rocksdb Table`提供在线服务
+		- 实现简单
 
-- 实时：由`BuildService`消费`Kafka`数据录入到`Rocksdb Table`，消费到一定时间或数据时会生成一个版本，接着将`Rocksdb Table`在本地对应的文件打包压缩上传到`Hdfs`上，由`OnlineService`下载到本地并在内存中构建`Rocksdb Table`提供在线服务，同时`OnlineService`也会基于下载版本所消费到的`offset`继续消费数据往表中插入/更新数据
+		- 性能良好
+
+	- 缺点
+
+		- 用特殊值拼接各列值存在风险
+
+		- 不支持异常快速回滚
+
+		- 量大时更新较慢（为防止影响线上读控制了写入速率）
+
+		- 内存占用较多
+
+### 基于Rocksdb存储
+
+- **特征类型：**离线+实时
+
+- **特征版本：**多版本，每一份数据对应特定版本，虽然物理存储占用较多，但在数据异常时可通过版本切换的方式快速回滚
+
+> PS：离线按天生成版本，全实时/离线+全实时按每6小时生成一个版本，具体根据实际业务场景调整
+
+- **特征序列化**
+
+	- KV存储，Value使用自定义的序列化方式以二进制的方式紧凑存储，Value的存储格式为：col_1_val + col_2_val + ... + col_n_val（根据Schema定义的字段拼接字段值，空字段用一个byte标识）
+
+	- 支持多种数据类型的序列化
+
+		- string：len + val_bytes
+
+		- list：len + val_1_type + val_1 + val_2 + ... + val_n
+
+		- number：val_bytes
+
+		- map：len + map_val_type + map_val_1 + map_val_2 + ... + map_val_n
+
+			- map_val：str_key + val
+
+![%E6%97%A0%E6%A0%87%E9%A2%98-2022-03-04-0917.png](https://raw.githubusercontent.com/linyanbin666/pic/master/notionimg/7f/83/7f83693efc8abda9240c8d0512284e66.png)
+
+- **实现方式**
+
+	- 离线：由`BuildService`读取`Hive Metadata`并解析`Hdfs File`数据生成`Key-Value`录入到`Rocksdb Table`，录入完成后将`Rocksdb Table`在本地对应的文件打包压缩上传到`Hdfs`上，最终由`OnlineService`下载到本地并在内存中构建`Rocksdb Table`提供在线服务
+
+	- 实时：由`BuildService`消费`Kafka`数据录入到`Rocksdb Table`，消费到一定时间或数据时会生成一个版本，接着将`Rocksdb Table`在本地对应的文件打包压缩上传到`Hdfs`上，由`OnlineService`下载到本地并在内存中构建`Rocksdb Table`提供在线服务，同时`OnlineService`也会基于下载版本所消费到的`offset`继续消费数据往表中插入/更新数据
 
 ![%E7%89%B9%E5%BE%81%E5%BD%95%E5%85%A5Rocksdb%E6%B5%81%E7%A8%8B.png](https://raw.githubusercontent.com/linyanbin666/pic/master/notionimg/59/33/59333f9b94315d028602b49ef624cbca.png)
 
-基于Rocksdb存储实现流程
+- **优缺点**
+
+	- 优点
+
+		- 内存占用较少
+
+		- 性能良好
+
+		- 多版本支持异常回滚
+
+	- 缺点
+
+		- 实现较复杂，需要进行调优
 
 ### 特征查询
 
