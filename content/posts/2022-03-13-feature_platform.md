@@ -1,11 +1,12 @@
 ---
 categories:
-- 工作总结
+- 推荐工程系列
 date: '2022-03-13T10:45:00.000Z'
 showToc: true
 tags:
 - 特征平台
 - 推荐工程
+- 工作总结
 title: 推荐工程-特征平台
 
 ---
@@ -98,21 +99,21 @@ title: 推荐工程-特征平台
 
 - **特征序列化**
 
-	- 单表离线特征：hash结构，key为物品id，field为离线特征表id，value为所有特征列拼接的值（colConfigId\001colValue\001colValue，其中colConfigId为列配置记录id，colValue为列值，colValue为null时用\002填充，采用Snappy压缩value以节省空间）
+**单表离线特征**：hash结构，key为物品id，field为离线特征表id，value为所有特征列拼接的值（colConfigId\001colValue\001colValue，其中colConfigId为列配置记录id，colValue为列值，colValue为null时用\002填充，采用Snappy压缩value以节省空间）
 
-		![Redis%E7%A6%BB%E7%BA%BF%E7%89%B9%E5%BE%81%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/4c207e9e-9670-489b-a0ed-94ef9c997b68/Redis%E7%A6%BB%E7%BA%BF%E7%89%B9%E5%BE%81%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220326%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220326T103910Z&X-Amz-Expires=3600&X-Amz-Signature=6f861633510c9c19e4bedd095d51131b391263eecb78d130e0bec101a9561523&X-Amz-SignedHeaders=host&x-id=GetObject)
+![Redis%E7%A6%BB%E7%BA%BF%E7%89%B9%E5%BE%81%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png](https://raw.githubusercontent.com/linyanbin666/pic/master/notionimg/cc/2d/cc2df6fc3819b3dff8b3a98d8a7d93b4.png)
 
-	- 交叉表离线特征：hash结构，key为物品id，field为交叉物品id，value为所有特征列拼接的值（colConfigId\001colValue\001colValue，其中colConfigId为列配置记录id，colValue为列值，colValue为null时用\002填充，采用Snappy压缩value以节省空间）
+**交叉表离线特征**：hash结构，key为物品id，field为交叉物品id，value为所有特征列拼接的值（colConfigId\001colValue\001colValue，其中colConfigId为列配置记录id，colValue为列值，colValue为null时用\002填充，采用Snappy压缩value以节省空间）
 
-		![redis%E5%AE%9E%E6%97%B6%E7%89%B9%E5%BE%81%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/62d081ec-6eed-4d99-81ce-52473cc03ad7/redis%E5%AE%9E%E6%97%B6%E7%89%B9%E5%BE%81%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220326%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220326T103910Z&X-Amz-Expires=3600&X-Amz-Signature=4f796453f606aec791adcb32ffc6723086ef237adb748cd793f8905145bbbac5&X-Amz-SignedHeaders=host&x-id=GetObject)
+![redis%E5%AE%9E%E6%97%B6%E7%89%B9%E5%BE%81%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png](https://raw.githubusercontent.com/linyanbin666/pic/master/notionimg/87/33/8733d94f4cac1aeb80c26a62d87fda30.png)
 
-	- 单表实时特征：hash结构，key为物品id_rt（_rt为后缀字符串，与离线特征区分），field为实时字段名，value为实时字段值
+**单表实时特征**：hash结构，key为物品id_rt（_rt为后缀字符串，与离线特征区分），field为实时字段名，value为实时字段值
 
-		![redis%E5%AE%9E%E6%97%B6%E7%89%B9%E5%BE%81%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/04a7e7df-09a9-4342-a0e8-f86463ba7ea2/redis%E5%AE%9E%E6%97%B6%E7%89%B9%E5%BE%81%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220326%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220326T103911Z&X-Amz-Expires=3600&X-Amz-Signature=338a7dd8835e6f78ba051ace3b5452078095aecdff0419089f308be1926be582&X-Amz-SignedHeaders=host&x-id=GetObject)
+![redis%E5%AE%9E%E6%97%B6%E7%89%B9%E5%BE%81%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png](https://raw.githubusercontent.com/linyanbin666/pic/master/notionimg/a0/c7/a0c7a14ae1e31d8b4fbbaa4d4dec67d8.png)
 
-	- 交叉表实时特征：hash结构，key为物品id_rt（_rt为后缀字符串，与离线特征区分），field为交叉物品id，value为实时字段key-value json串
+**交叉表实时特征**：hash结构，key为物品id_rt（_rt为后缀字符串，与离线特征区分），field为交叉物品id，value为实时字段key-value json串
 
-		![redis%E5%AE%9E%E6%97%B6%E4%BA%A4%E5%8F%89%E8%A1%A8%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/46161510-c827-49f6-bb92-52814b717cd3/redis%E5%AE%9E%E6%97%B6%E4%BA%A4%E5%8F%89%E8%A1%A8%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220326%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220326T103911Z&X-Amz-Expires=3600&X-Amz-Signature=d2441b586649dc6edeba369551226289a312bfae8202e5dfb57c0020a6db3786&X-Amz-SignedHeaders=host&x-id=GetObject)
+![redis%E5%AE%9E%E6%97%B6%E4%BA%A4%E5%8F%89%E8%A1%A8%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png](https://raw.githubusercontent.com/linyanbin666/pic/master/notionimg/08/44/08447394944f828ec8730832e3481172.png)
 
 > PS：离线特征过期时间为7天、实时特征过期时间为3天，具体根据实际业务场景设置
 
