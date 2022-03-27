@@ -644,7 +644,7 @@ uglyURLs = false
     # Note: render only in production
     #       environment
 
-    enableComments = false
+    enableComments = true
     # Note: *global settings*
     #       `comments` in post’s Front Matter
     #       has a higher priority than here
@@ -675,9 +675,9 @@ uglyURLs = false
     # Note: https://valine.js.org/
 
     ## Utterances
-    enableUtterances = false
-    utterancesRepo = ""
-    utterancesIssueTerm = "pathname"
+    enableUtterances = true
+    utterancesRepo = "linyanbin666/linyanbin666.github.io"
+    utterancesIssueTerm = "title"
     utterancesTheme = "github-light"
     utterancesThemeDark = "photon-dark"
     utterancesLabel = ""
@@ -1119,9 +1119,9 @@ uglyURLs = false
     ######################################
     # Post Share
 
-    enablePostShare = true
+    enablePostShare = false
 
-    displayPostShare = true
+    displayPostShare = false
     # Note: *global settings*
     #       `share` in post’s Front Matter
     #       has a higher priority than here
