@@ -649,6 +649,8 @@ uglyURLs = false
     #       `comments` in post’s Front Matter
     #       has a higher priority than here
 
+    autoLoadComments = true
+
     ## Disqus
     enableDisqus = false
     disqusShortname = ""
@@ -759,7 +761,7 @@ uglyURLs = false
     ######################################
     # Post Meta Info
 
-    enablePostMeta = false
+    enablePostMeta = true
     # Note: *global settings*
     #       `meta` in post’s Front Matter
     #       has a higher priority than here
@@ -894,7 +896,7 @@ uglyURLs = false
     #       and the HTML code you add must
     #       start with `<video src="`
 
-    enableVideoHost = true
+    enableVideoHost = false
 
     videoHostURL = "https://example.com/"
 
