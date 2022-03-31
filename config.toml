@@ -1240,7 +1240,7 @@ uglyURLs = false
     displaySiteCopyright = true
 
     # Custom Footer (Markdown supported)
-    customFooter = "[粤ICP备20026113号-1](https://beian.miit.gov.cn/)"
+    customFooter = ""
 
     displayBusuanziSiteUVAndPV = false
     busuanziSiteUVText = "本站访客数"
