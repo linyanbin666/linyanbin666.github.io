@@ -206,12 +206,12 @@ uglyURLs = false
         weight = 2
         pre = "internal"
         post = "archive"
-    [[menu.main]]
-        url = "/life/"
-        name = "生活"
-        weight = 3
-        pre = "internal"
-        post = "th"
+    #[[menu.main]]
+    #    url = "/life/"
+    #    name = "生活"
+    #    weight = 3
+    #    pre = "internal"
+    #    post = "th"
 	[[menu.main]]
         url = "/categories/"
         name = "分类"
@@ -236,10 +236,10 @@ uglyURLs = false
     [[menu.main]]
         weight = 8
         identifier = "lang-switcher"
-    [[menu.main]]
-        weight = 9
-        identifier = "search"
-        post = "search"
+    #[[menu.main]]
+    #    weight = 9
+    #    identifier = "search"
+    #    post = "search"
 
 
 
@@ -322,7 +322,7 @@ uglyURLs = false
     # 3. posts     List of post’s summary
     # 4. page      Normal page/post
 
-    homeLayout = "poetry"
+    homeLayout = "posts"
 
     ## Poetry
     # Verse (Markdown supported)
