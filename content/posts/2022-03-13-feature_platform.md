@@ -31,7 +31,7 @@ title: 推荐工程-特征平台
 
 # 平台架构
 
-![%E7%89%B9%E5%BE%81%E5%B9%B3%E5%8F%B0.png](https://raw.githubusercontent.com/linyanbin666/pic/master/notionimg/41/10/4110ebf702a481d7df0f559466ad66bc.png)
+![%E7%89%B9%E5%BE%81%E5%B9%B3%E5%8F%B0.png](https://raw.githubusercontent.com/linyanbin666/pic/master/notionimg/23/09/230951e7ab62a1a7b825ba7d906c349b.png)
 
 架构图由下向上分别是：
 
@@ -39,17 +39,17 @@ title: 推荐工程-特征平台
 
 - Kafka：用于接收实时特征
 
-- Redis、HBase：用于存放特征（离线+实时），其中离线特征在Redis中采取压缩手段以节省内存
+- Redis、HBase：用于存放特征（离线+实时），提供在线查询，其中离线特征在Redis中采取压缩手段以节省内存
 
 - Hive：用于存放离线特征
 
-- Rocksdb：用于存放物品特征（离线+实时），替换Redis中存储的物品特征
+- Rocksdb：用于存放物品特征（离线+实时），提供在线查询，替换Redis中存储的物品特征
 
 ## **计算层**
 
 - Spark Streaming、Flink：用于生产实时特征
 
-- Spark SQL：用于同步离线特征
+- Spark SQL：用于同步Hive离线特征到在线的存储
 
 ## **业务处理层**
 
@@ -99,11 +99,11 @@ title: 推荐工程-特征平台
 
 - **特征序列化**
 
-**单表离线特征**：hash结构，key为物品id，field为离线特征表id，value为所有特征列拼接的值（colConfigId\001colValue\001colValue，其中colConfigId为列配置记录id，colValue为列值，colValue为null时用\002填充，采用Snappy压缩value以节省空间）
+**单表离线特征**：hash结构，key为物品id，field为离线特征表id，value为所有特征列拼接的值（colConfigId\001colValue\001colValue，其中colConfigId为列配置记录id，\001为特殊分隔符，colValue为列值，colValue为null时用\002填充，采用Snappy压缩value以节省空间）
 
 ![Redis%E7%A6%BB%E7%BA%BF%E7%89%B9%E5%BE%81%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png](https://raw.githubusercontent.com/linyanbin666/pic/master/notionimg/cc/2d/cc2df6fc3819b3dff8b3a98d8a7d93b4.png)
 
-**交叉表离线特征**：hash结构，key为物品id，field为交叉物品id，value为所有特征列拼接的值（colConfigId\001colValue\001colValue，其中colConfigId为列配置记录id，colValue为列值，colValue为null时用\002填充，采用Snappy压缩value以节省空间）
+**交叉表离线特征**：hash结构，key为物品id，field为交叉物品id，value为所有特征列拼接的值（colConfigId\001colValue\001colValue，其中colConfigId为列配置记录id，\001为特殊分隔符，colValue为列值，colValue为null时用\002填充，采用Snappy压缩value以节省空间）
 
 ![redis%E5%AE%9E%E6%97%B6%E7%89%B9%E5%BE%81%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F.png](https://raw.githubusercontent.com/linyanbin666/pic/master/notionimg/87/33/8733d94f4cac1aeb80c26a62d87fda30.png)
 
@@ -153,7 +153,7 @@ title: 推荐工程-特征平台
 
 - **特征序列化**
 
-	- KV存储，Value使用自定义的序列化方式以二进制的方式紧凑存储，Value的存储格式为：col_1_val + col_2_val + ... + col_n_val（根据Schema定义的字段拼接字段值，空字段用一个byte标识）
+	- KV存储，Value使用自定义的序列化方式以二进制的方式紧凑存储，Value的存储格式为：col_len + col_1_sign + col_1_val + col_2_sign + col_2_val + ... + col_n_sign + col_n_val（根据Schema定义的字段拼接字段值，col_len为定义的字段数，col_i_sign为字段是否为空标识，col_i_val为字段值）
 
 	- 支持多种数据类型的序列化
 
@@ -167,7 +167,7 @@ title: 推荐工程-特征平台
 
 			- map_val：str_key + val
 
-![%E6%97%A0%E6%A0%87%E9%A2%98-2022-03-04-0917.png](https://raw.githubusercontent.com/linyanbin666/pic/master/notionimg/7f/83/7f83693efc8abda9240c8d0512284e66.png)
+![%E6%97%A0%E6%A0%87%E9%A2%98-2022-03-04-0917.png](https://raw.githubusercontent.com/linyanbin666/pic/master/notionimg/b7/d2/b7d2379e432cf570de29e56f71f7bd9e.png)
 
 - **实现方式**
 
@@ -208,6 +208,8 @@ title: 推荐工程-特征平台
 - 减少特征存储索引构建时间
 
 - 提升特征查询服务的性能
+
+- 特征监控
 
 <br/>
 
