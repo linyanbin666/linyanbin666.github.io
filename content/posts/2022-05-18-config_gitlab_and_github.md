@@ -13,8 +13,6 @@ title: 配置同时使用gitlab和github
 
 
 
-[table_of_contents is not supported]
-
 ## 配置步骤
 
 ### 1. **分别生成两份密钥文件**
