@@ -6,7 +6,7 @@ showToc: true
 tags:
 - MySQL
 - 极客时间
-title: 专栏学习-MySQL实战45讲
+title: 专栏学习-MySQL实战45讲（一）
 
 ---
 
@@ -130,7 +130,7 @@ title: 专栏学习-MySQL实战45讲
 
 - Oracle默认隔离级别为Read Committed，Oracle支持Read Committed、Serializable和Read-Only，Serializable和Read-Only显然都是不适合作为默认隔离级别的，那么就只剩Read Committed这个唯一的选择）
 
-- MySQL默认隔离级别为Repeatable Read，MySQL早期只有statement这种binlog格式，这时候如果使用读提交(Read Committed)、读未提交(Read Uncommitted)这两种隔离级别可能会出现主从数据不一致问题
+- MySQL默认隔离级别为Repeatable Read，MySQL早期只有statement这种binlog格式，这时候如果使用读提交(Read Committed)、读未提交(Read Uncommitted)这两种隔离级别可能会出现主从数据不一致问题（出现事务乱序时）
 
 ### 事务的启动方式
 
@@ -254,29 +254,5 @@ title: 专栏学习-MySQL实战45讲
 
 - **innodb_change_buffer_max_size**：设置 Change Buffer能占用 Buffer Pool 的最大比例，默认值为25
 
-## MySQL锁
-
-### 全局锁
-
-- 全局锁就是对整个数据库实例加锁。MySQL提供了一个加全局读锁的方法，命令是 **Flush tables with read lock** (FTWRL)。该命令的典型使用场景是做**全库逻辑备份**。也就是把整库每个表都 select 出来存成文本。
-
-- 官方自带的逻辑备份工具是 **mysqldump**。当 mysqldump 使用参数 —**single-transaction **的时候，导数据之前就会启动一个事务，来确保拿到一致性视图（可重复读隔离级别下）。而由于 MVCC 的支持，这个过程中数据是可以正常更新的。但该方法只适用于所有的表使用事务引擎的库
-
-### 表级锁
-
-- MySQL表级锁有两种，一种是**表锁**，一种是**元数据锁**（Meta data lock，MDL）
-
-- 表锁的语法是 lock tables … read/write，可以用 unlock tables 主动释放锁或等待客户端断开时自动释放
-
-- 元数据锁（MDL）在 MySQL 5.5 版本引入，不需要显示使用，在访问一个表时会被自动加上。当对一个表做增删改查操作（DML）的时候，加 MDL 读锁；当要对表做结构变更操作（DDL）的时候，加 MDL 写锁。事务中的 MDL 锁，在语句执行开始时申请，但是语句结束后并不会马上释放，而会等到整个事务提交后再释放
-
-### 行锁
-
-- 在 InnoDB 事务中，行锁是在需要的时候才加上的，但并不是不需要了就立刻释放，而是要等到事务结束时才释放。这个就是两阶段锁协议。如果事务中需要锁多个行，要把最可能造成锁冲突、最可能影响并发度的锁尽量往后放
-
-- 死锁应对策略
-
-	- 直接进入等待，直到超时。这个超时时间可以通过参数 innodb_lock_wait_timeout 来设置
-
-	- 发起死锁检测，发现死锁后，主动回滚死锁链条中的某一个事务，让其他事务得以继续执行。将参数 innodb_deadlock_detect 设置为 on，表示开启这个逻辑。
+<br/>
 
