@@ -42,27 +42,27 @@ title: 采坑系列-Mybatis-plus 3.0-RELEASE逻辑删除Bug
 
 以上用于复现问题使用的方法为`BaseMapper#selectList`，根据<u>*[Mybatis-plus的BaseMapper实现原理](https://juejin.cn/post/7002423698565103653)*</u>，自定义逻辑的实现会对应一个`AbstractMethod`实现类，又因为我们Demo中使用了`LogicSqlInjector`，其提供了一系列的实现类，而`selectList`方法对应的实现类为`LogicSelectList`，所以从该类进入调试
 
-![](https://raw.githubusercontent.com/linyanbin666/pic/master/notionimg/d4/1d/d41d8cd98f00b204e9800998ecf8427e)
+![Untitled.png](https://raw.githubusercontent.com/linyanbin666/pic/master/notionimg/75/e4/75e461ea6562ac4d87c30b3590bacb00.png)
 
 ### 跟踪执行
 
 跟踪`LogicSelectList`类的执行可看到逻辑删除过滤条件的处理是放在父类`AbstractLogicMethod`的`sqlWhereEntityWrapper`方法中，其直接获取`TableInfo`类的`logicDelete`属性，问题中所返回的结果为`false`，跳过了逻辑删除过滤条件的处理。到这里可以知道为什么逻辑删除功能没有生效了，但是具体原因还得看看为什么`logicDelete`属性是设置为`false`的
 
-![](https://raw.githubusercontent.com/linyanbin666/pic/master/notionimg/d4/1d/d41d8cd98f00b204e9800998ecf8427e)
+![Untitled.png](https://raw.githubusercontent.com/linyanbin666/pic/master/notionimg/1d/70/1d7012963e595f92900448d276f3358c.png)
 
 ### 寻找根因
 
 通过寻找对`TableInfo`类的`logicDelete`属性进行设置的地方（通过IDEA Find Usages），最终可以找到是在`TableFieldInfo`类中的构造函数中进行设置的，其中`initLogicDelete`方法就是判断字段是否有标识`@TableLogic`注解
 
-![](https://raw.githubusercontent.com/linyanbin666/pic/master/notionimg/d4/1d/d41d8cd98f00b204e9800998ecf8427e)
+![Untitled.png](https://raw.githubusercontent.com/linyanbin666/pic/master/notionimg/ec/14/ec147cf12c1052a2e72d5d48cf447fba.png)
 
 而`TableFieldInfo`实例创建的地方是在`TableInfoHelper`类的`initTableFields`方法中。该方法会通过反射获取实体类中的所有字段（包含父类的），然后遍历这些字段创建成对应的`TableFieldInfo`元数据对象，即每个字段会调用一次`TableFieldInfo`的构造函数，而在构造函数中会对`TableInfo`类的`logicDelete`属性直接进行**覆盖赋值**（参考上图）。从这里就可以看到，如果最后一个字段不是逻辑删除字段的话，`TableInfo`类的`logicDelete`属性就为`false`了
 
-![](https://raw.githubusercontent.com/linyanbin666/pic/master/notionimg/d4/1d/d41d8cd98f00b204e9800998ecf8427e)
+![Untitled.png](https://raw.githubusercontent.com/linyanbin666/pic/master/notionimg/2a/bc/2abcd7cb535c95d618a40911d316e905.png)
 
 到这里就知道为什么逻辑删除字段需要作为实体类的最后一个属性了，根本原因就是`Mybatis-plus` `3.0-RELEASE`内部代码的问题，正常的话应该只需要判断有一个字段标识了逻辑删除后，后面就不应该再对`logicDelete`属性进行赋值了。另外从获取实体类字段列表的方法中可以看到，返回的列表会先添加实体类自身的字段，再添加父类中非重名的字段（以此类推）。因此**如果实体类有父类的话，逻辑删除字段必须放在最顶级的父类中（Object之下），并且作为最后一个属性**。
 
-![](https://raw.githubusercontent.com/linyanbin666/pic/master/notionimg/d4/1d/d41d8cd98f00b204e9800998ecf8427e)
+![Untitled.png](https://raw.githubusercontent.com/linyanbin666/pic/master/notionimg/13/70/1370bda216573a50878409ff3bf812e6.png)
 
 # 结论
 
