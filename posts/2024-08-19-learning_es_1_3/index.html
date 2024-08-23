@@ -1,0 +1,565 @@
+<!doctype html><html lang=zh-CN><head prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#"><meta charset=UTF-8><meta name=generator content="Hugo 0.133.0"><meta name=theme-color content="#fff"><meta name=color-scheme content="light dark"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=format-detection content="telephone=no, date=no, address=no, email=no"><meta http-equiv=Cache-Control content="no-transform"><meta http-equiv=Cache-Control content="no-siteapp"><title>书籍学习-一本书讲透Elasticsearch：原理、进阶和工程实践（三） | 原生菜鸟</title>
+<link rel=stylesheet href=/css/meme.min.54f473a397d341ce90335ddfd512f3856c19f0a5f89b1c5c8c73909e15a11cdf.css><script src=https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js defer></script><script src=/js/meme.min.32a685b876c1998d527bb4856eb99ced36a759a7edf7abda6454a6973422edef.js></script><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,700;1,400;1,700&amp;family=Source+Code+Pro:ital,wght@0,400;0,700;1,400;1,700&amp;family=Comfortaa:wght@700&amp;display=swap" media=print onload='this.media="all"'><noscript><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,700;1,400;1,700&amp;family=Source+Code+Pro:ital,wght@0,400;0,700;1,400;1,700&amp;family=Comfortaa:wght@700&amp;display=swap"></noscript><meta name=author content="Yanbin Lin"><meta name=description content="本文是个人学习书籍《一本书讲透Elasticsearch：原理、进阶和工程实践》过程……"><link rel="shortcut icon" href=/favicon.ico type=image/x-icon><link rel=mask-icon href=/icons/safari-pinned-tab.svg color=#2a6df4><link rel=apple-touch-icon sizes=180x180 href=/icons/apple-touch-icon.png><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-title content="原生菜鸟"><meta name=apple-mobile-web-app-status-bar-style content="black"><meta name=mobile-web-app-capable content="yes"><meta name=application-name content="原生菜鸟"><meta name=msapplication-starturl content="../../"><meta name=msapplication-TileColor content="#fff"><meta name=msapplication-TileImage content="../../icons/mstile-150x150.png"><link rel=manifest href=/manifest.json><link rel=canonical href=https://ithorizon.top/posts/2024-08-19-learning_es_1_3/><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","datePublished":"2024-08-19T09:33:00+00:00","dateModified":"2024-08-19T23:58:04+08:00","url":"https://ithorizon.top/posts/2024-08-19-learning_es_1_3/","headline":"书籍学习-一本书讲透Elasticsearch：原理、进阶和工程实践（三）","description":"本文是个人学习书籍《一本书讲透Elasticsearch：原理、进阶和工程实践》过程……","inLanguage":"zh-CN","articleSection":"posts","wordCount":11428,"image":"https://ithorizon.top/icons/apple-touch-icon.png","author":{"@type":"Person","description":"To Be Better","email":"1468387317@qq.com","image":"https://ithorizon.top/icons/apple-touch-icon.png","url":"https://ithorizon.top/","name":"Yanbin Lin"},"license":"在保留本文作者及本文链接的前提下，非商业用途随意转载分享","publisher":{"@type":"Organization","name":"原生菜鸟","logo":{"@type":"ImageObject","url":"https://ithorizon.top/icons/apple-touch-icon.png"},"url":"https://ithorizon.top/"},"mainEntityOfPage":{"@type":"WebSite","@id":"https://ithorizon.top/"}}</script><meta name=twitter:card content="summary"><meta property="og:title" content="书籍学习-一本书讲透Elasticsearch：原理、进阶和工程实践（三）"><meta property="og:description" content="本文是个人学习书籍《一本书讲透Elasticsearch：原理、进阶和工程实践》过程……"><meta property="og:url" content="https://ithorizon.top/posts/2024-08-19-learning_es_1_3/"><meta property="og:site_name" content="原生菜鸟"><meta property="og:locale" content="zh"><meta property="og:image" content="https://ithorizon.top/icons/apple-touch-icon.png"><meta property="og:type" content="article"><meta property="article:published_time" content="2024-08-19T09:33:00+00:00"><meta property="article:modified_time" content="2024-08-19T23:58:04+08:00"><meta property="article:section" content="posts"><link rel=preconnect href=https://www.google-analytics.com crossorigin><script async src="https://www.googletagmanager.com/gtag/js?id=G-1KGLPKY6FP"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-1KGLPKY6FP")</script></head><body><div class=container><header class=header><div class=header-wrapper><div class="header-inner single"><div class=site-brand><a href=/ class=brand>原生菜鸟</a></div><nav class=nav><ul class=menu id=menu><li class=menu-item><a href=/posts/><svg viewBox="0 0 512 512" class="icon archive"><path d="M32 448c0 17.7 14.3 32 32 32h384c17.7.0 32-14.3 32-32V160H32v288zm160-212c0-6.6 5.4-12 12-12h104c6.6.0 12 5.4 12 12v8c0 6.6-5.4 12-12 12H204c-6.6.0-12-5.4-12-12v-8zM480 32H32C14.3 32 0 46.3.0 64v48c0 8.8 7.2 16 16 16h480c8.8.0 16-7.2 16-16V64c0-17.7-14.3-32-32-32z"/></svg><span class=menu-item-name>技术</span></a></li><li class=menu-item><a href=/categories/><svg t="1618732736564" class="icon categories" viewBox="0 0 1024 1024" p-id="2007" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200"><defs><style/></defs><path d="M315.0848 551.3728H157.5424C70.8864 551.3728.0 622.2848.0 708.9152v157.5424C0 953.1136 70.912 1024 157.5424 1024h157.5424c86.6304.0 157.5424-70.912 157.5424-157.5424V708.9152c0-86.6304-70.912-157.5424-157.5424-157.5424zm78.7712 315.0848a79.0016 79.0016.0 01-78.7712 78.7712H157.5424a79.0016 79.0016.0 01-78.7712-78.7712V708.9152a79.0016 79.0016.0 0178.7712-78.7712h157.5424a79.0016 79.0016.0 0178.7712 78.7712v157.5424zM866.4576.0H708.9152c-86.6304.0-157.5424 70.912-157.5424 157.5424v157.5424c0 86.6304 70.912 157.5424 157.5424 157.5424h157.5424c86.656.0 157.5424-70.912 157.5424-157.5424V157.5424C1024 70.8864 953.088.0 866.4576.0zm78.7712 315.0848a79.0016 79.0016.0 01-78.7712 78.7712H708.9152a79.0016 79.0016.0 01-78.7712-78.7712V157.5424a79.0016 79.0016.0 0178.7712-78.7712h157.5424a79.0016 79.0016.0 0178.7712 78.7712v157.5424zm-78.7712 236.288H708.9152c-86.6304.0-157.5424 70.912-157.5424 157.5424v157.5424c0 86.656 70.912 157.5424 157.5424 157.5424h157.5424C953.1136 1024 1024 953.088 1024 866.4576V708.9152c0-86.6304-70.912-157.5424-157.5424-157.5424zm78.7712 315.0848a79.0016 79.0016.0 01-78.7712 78.7712H708.9152a79.0016 79.0016.0 01-78.7712-78.7712V708.9152a79.0016 79.0016.0 0178.7712-78.7712h157.5424a79.0016 79.0016.0 0178.7712 78.7712v157.5424zM315.0848.0H157.5424C70.8864.0.0 70.912.0 157.5424v157.5424c0 86.6304 70.912 157.5424 157.5424 157.5424h157.5424c86.6304.0 157.5424-70.912 157.5424-157.5424V157.5424C472.6272 70.8864 401.7152.0 315.0848.0zm78.7712 315.0848a79.0016 79.0016.0 01-78.7712 78.7712H157.5424a79.0016 79.0016.0 01-78.7712-78.7712V157.5424a79.0016 79.0016.0 0178.7712-78.7712h157.5424a79.0016 79.0016.0 0178.7712 78.7712v157.5424z" fill="#707070" p-id="2008"/></svg><span class=menu-item-name>分类</span></a></li><li class=menu-item><a href=/tags/><svg viewBox="0 0 640 512" class="icon tags"><path d="M497.941 225.941 286.059 14.059A48 48 0 00252.118.0H48C21.49.0.0 21.49.0 48v204.118a48 48 0 0014.059 33.941l211.882 211.882c18.744 18.745 49.136 18.746 67.882.0l204.118-204.118c18.745-18.745 18.745-49.137.0-67.882zM112 160c-26.51.0-48-21.49-48-48s21.49-48 48-48 48 21.49 48 48-21.49 48-48 48zm513.941 133.823L421.823 497.941c-18.745 18.745-49.137 18.745-67.882.0l-.36-.36L527.64 323.522c16.999-16.999 26.36-39.6 26.36-63.64s-9.362-46.641-26.36-63.64L331.397.0h48.721a48 48 0 0133.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137.0 67.882z"/></svg><span class=menu-item-name>标签</span></a></li><li class=menu-item><a href=/about/><svg viewBox="0 0 496 512" class="icon user-circle"><path d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm0 96c48.6.0 88 39.4 88 88s-39.4 88-88 88-88-39.4-88-88 39.4-88 88-88zm0 344c-58.7.0-111.3-26.6-146.5-68.2 18.8-35.4 55.6-59.8 98.5-59.8 2.4.0 4.8.4 7.1 1.1 13 4.2 26.6 6.9 40.9 6.9s28-2.7 40.9-6.9c2.3-.7 4.7-1.1 7.1-1.1 42.9.0 79.7 24.4 98.5 59.8C359.3 421.4 306.7 448 248 448z"/></svg><span class=menu-item-name>关于</span></a></li><li class=menu-item><a id=theme-switcher href=#><svg viewBox="0 0 512 512" class="icon theme-icon-light"><path d="M193.2 104.5 242 7a18 18 0 0128 0l48.8 97.5L422.2 70A18 18 0 01442 89.8l-34.5 103.4L505 242a18 18 0 010 28l-97.5 48.8L442 422.2A18 18 0 01422.2 442l-103.4-34.5L270 505a18 18 0 01-28 0l-48.8-97.5L89.8 442A18 18 0 0170 422.2l34.5-103.4-97.5-48.8a18 18 0 010-28l97.5-48.8L70 89.8A18 18 0 0189.8 70zM256 128a128 128 0 10.01.0M256 160a96 96 0 10.01.0"/></svg><svg viewBox="0 0 512 512" class="icon theme-icon-dark"><path d="M27 412A256 256 0 10181 5a11.5 11.5.0 00-5 20A201.5 201.5.0 0142 399a11.5 11.5.0 00-15 13"/></svg></a></li></ul></nav></div></div><input type=checkbox id=nav-toggle aria-hidden=true>
+<label for=nav-toggle class=nav-toggle></label>
+<label for=nav-toggle class=nav-curtain></label></header><main class="main single" id=main><div class=main-inner><article class="content post h-entry" data-align=justify data-type=posts data-toc-num=true><h1 class="post-title p-name">书籍学习-一本书讲透Elasticsearch：原理、进阶和工程实践（三）</h1><div class=post-meta><time datetime=2024-08-19T09:33:00+00:00 class="post-meta-item published dt-published"><svg viewBox="0 0 448 512" class="icon post-meta-icon"><path d="M148 288h-40c-6.6.0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12zm108-12v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm96 0v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm-96 96v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm-96 0v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm192 0v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm96-260v352c0 26.5-21.5 48-48 48H48c-26.5.0-48-21.5-48-48V112c0-26.5 21.5-48 48-48h48V12c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v52h128V12c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v52h48c26.5.0 48 21.5 48 48zm-48 346V160H48v298c0 3.3 2.7 6 6 6h340c3.3.0 6-2.7 6-6z"/></svg>&nbsp;2024.8.19</time>
+<time datetime=2024-08-19T23:58:04+08:00 class="post-meta-item modified dt-updated"><svg viewBox="0 0 448 512" class="icon post-meta-icon"><path d="M4e2 64h-48V12c0-6.627-5.373-12-12-12h-40c-6.627.0-12 5.373-12 12v52H160V12c0-6.627-5.373-12-12-12h-40c-6.627.0-12 5.373-12 12v52H48C21.49 64 0 85.49.0 112v352c0 26.51 21.49 48 48 48h352c26.51.0 48-21.49 48-48V112c0-26.51-21.49-48-48-48zm-6 4e2H54a6 6 0 01-6-6V160h352v298a6 6 0 01-6 6zm-52.849-200.65L198.842 404.519c-4.705 4.667-12.303 4.637-16.971-.068l-75.091-75.699c-4.667-4.705-4.637-12.303.068-16.971l22.719-22.536c4.705-4.667 12.303-4.637 16.97.069l44.104 44.461 111.072-110.181c4.705-4.667 12.303-4.637 16.971.068l22.536 22.718c4.667 4.705 4.636 12.303-.069 16.97z"/></svg>&nbsp;2024.8.19</time>
+<span class="post-meta-item category"><svg viewBox="0 0 512 512" class="icon post-meta-icon"><path d="M464 128H272l-54.63-54.63c-6-6-14.14-9.37-22.63-9.37H48C21.49 64 0 85.49.0 112v288c0 26.51 21.49 48 48 48h416c26.51.0 48-21.49 48-48V176c0-26.51-21.49-48-48-48zm0 272H48V112h140.12l54.63 54.63c6 6 14.14 9.37 22.63 9.37H464v224z"/></svg>&nbsp;<a href=/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/ class="category-link p-category">学习笔记</a></span>
+<span class="post-meta-item wordcount"><svg viewBox="0 0 512 512" class="icon post-meta-icon"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3.0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9.0l60.1 60.1c18.8 18.7 18.8 49.1.0 67.9zM284.2 99.8 21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3.0-17l-111-111c-4.8-4.7-12.4-4.7-17.1.0zM124.1 339.9c-5.5-5.5-5.5-14.3.0-19.8l154-154c5.5-5.5 14.3-5.5 19.8.0s5.5 14.3.0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8.0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"/></svg>&nbsp;11428</span>
+<span class="post-meta-item reading-time"><svg viewBox="0 0 512 512" class="icon post-meta-icon"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5.0-2e2-89.5-2e2-2e2S145.5 56 256 56s2e2 89.5 2e2 2e2-89.5 2e2-2e2 2e2zm61.8-104.4-84.9-61.7c-3.1-2.3-4.9-5.9-4.9-9.7V116c0-6.6 5.4-12 12-12h32c6.6.0 12 5.4 12 12v141.7l66.8 48.6c5.4 3.9 6.5 11.4 2.6 16.8L334.6 349c-3.9 5.3-11.4 6.5-16.8 2.6z"/></svg>&nbsp;23&nbsp;分钟</span></div><div class="post-body e-content"><blockquote><p>本文是个人学习书籍《一本书讲透Elasticsearch：原理、进阶和工程实践》过程中所记录的一些笔记，内容来源于书籍</p></blockquote><h2 id=elasticsearch集群><a href=#elasticsearch集群 class=anchor-link><svg viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96.0-59.27-59.26-59.27-155.7.0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757.0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037.0 01-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482.0 0120.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96.0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454.0 0020.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037.0 00-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639.0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Elasticsearch集群</h2><ul><li><p>冷热集群架构</p><ul><li><p>热节点存储用户最为关注的数据，而温或冷节点则用于存放用户不太重要或优先级较低的数据</p></li><li><p>可以提高查询性能、降低存储成本、优化集群性能、更好地管理数据和提高可扩展性</p></li></ul></li><li><p>索引生命周期管理</p><ul><li><p>Rollover：滚动索引</p><ul><li><p>创建符合正则表达式规范（即中间是“-”字符并且后面是数字字符）的索引，并批量导入数据</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>PUT my-index-20240528-000001
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl><span class=s2>&#34;aliases&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;my-alias&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;is_write_index&#34;</span>: <span class=nb>true</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>PUT my-alias/_bulk
+</span></span><span class=line><span class=cl><span class=o>{</span><span class=s2>&#34;index&#34;</span>: <span class=o>{</span><span class=s2>&#34;_id&#34;</span>: 1<span class=o>}}</span>
+</span></span><span class=line><span class=cl><span class=o>{</span><span class=s2>&#34;title&#34;</span>: <span class=s2>&#34;testing 01&#34;</span><span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>{</span><span class=s2>&#34;index&#34;</span>: <span class=o>{</span><span class=s2>&#34;_id&#34;</span>: 2<span class=o>}}</span>
+</span></span><span class=line><span class=cl><span class=o>{</span><span class=s2>&#34;title&#34;</span>: <span class=s2>&#34;testing 02&#34;</span><span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>{</span><span class=s2>&#34;index&#34;</span>: <span class=o>{</span><span class=s2>&#34;_id&#34;</span>: 3<span class=o>}}</span>
+</span></span><span class=line><span class=cl><span class=o>{</span><span class=s2>&#34;title&#34;</span>: <span class=s2>&#34;testing 03&#34;</span><span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>{</span><span class=s2>&#34;index&#34;</span>: <span class=o>{</span><span class=s2>&#34;_id&#34;</span>: 4<span class=o>}}</span>
+</span></span><span class=line><span class=cl><span class=o>{</span><span class=s2>&#34;title&#34;</span>: <span class=s2>&#34;testing 04&#34;</span><span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>{</span><span class=s2>&#34;index&#34;</span>: <span class=o>{</span><span class=s2>&#34;_id&#34;</span>: 5<span class=o>}}</span>
+</span></span><span class=line><span class=cl><span class=o>{</span><span class=s2>&#34;title&#34;</span>: <span class=s2>&#34;testing 05&#34;</span><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>基于滚动条件配置实现索引的滚动</p><ul><li><p>max_age：在索引层面，指从索引创建开始所经过的时间</p></li><li><p>max_docs：在索引层面，指最大文档数（不含副本分片中的文档）</p></li><li><p>max_size：在索引层面，指索引中所有分片的总存储空间（不含副本）</p></li><li><p>max_primary_shard_size：在分片层面，指索引中最大主分片的存储空间</p></li><li><p>max_primary_shard_docs：在分片层面，指索引中最大主分片的文档数</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST my-alias/_rollover
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl><span class=s2>&#34;conditions&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;max_age&#34;</span>: <span class=s2>&#34;7d&#34;</span>,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;max_docs&#34;</span>: 5,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;max_size&#34;</span>: <span class=s2>&#34;5gb&#34;</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li></ul></li><li><p>Shrink：压缩索引</p><ul><li><p>3个必要条件</p><ul><li><p>副本数为0（”index.number_of_replicas”: 0）</p></li><li><p>将分片数据都集中到一个独立的节点（”index.routing.allocation.include._tier_preference”: “data_hot”）</p></li><li><p>索引数据只读（”index.blocks.write“: true）</p></li></ul></li></ul></li><li><p>索引生命周期</p><ul><li><p>热(Hot)阶段</p></li><li><p>温(Warm)阶段</p></li><li><p>冷(Cold)阶段</p></li><li><p>归档(Frozen)阶段</p></li><li><p>删除(Delete)阶段</p></li></ul></li><li><p>DSL命令行实战步骤</p><ul><li><p>创建生命周期policy</p></li><li><p>创建索引模板，在模板中关联policy和别名</p></li><li><p>创建符合模板的起始索引，并插入数据</p></li><li><p>索引基于配置的ILM滚动</p></li><li><p>验证结果是否达到预期</p></li></ul></li></ul></li><li><p>跨机房、跨机架部署</p><ul><li><p>设置节点属性</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 节点1设置</span>
+</span></span><span class=line><span class=cl>node.attr.rack_id: rack_01
+</span></span><span class=line><span class=cl><span class=c1># 节点2设置</span>
+</span></span><span class=line><span class=cl>node.attr.rack_id: rack_02
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>设置集群层面的分片分配策略</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>PUT _cluster/settings
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;persisent&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;cluster.routing.allocation.awareness.attributes&#34;</span>: <span class=s2>&#34;rack_id&#34;</span>,
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;cluster.routing.allocation.awareness.force.rack_id.values&#34;</span>: <span class=s2>&#34;rack_01,rack_02&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li><li><p>索引/集群的备份与恢复</p><ul><li><p>常见方案</p><ul><li><p>使用Elasticsearch的快照和恢复功能进行备份和恢复。该方案适用于集群整体备份与迁移，包括全量、增量备份和恢复</p></li><li><p>通过reindex操作在集群内或跨集群同步数据。该方案适用于相同集群但不同索引层面的迁移，或者跨集群的索引迁移</p></li><li><p>使用elasticdump来迁移映射和数据。该方案适用于仅对索引层面进行数据或映射的迁移</p></li></ul></li><li><p>Elasticsearch快照和恢复功能</p><ul><li><p>快照执行步骤</p><ul><li><p>配置快照存储路径</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>path.repo: <span class=o>[</span><span class=s2>&#34;path&#34;</span><span class=o>]</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>注册快照存储库</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>PUT /_snapshot/my_backup
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;type&#34;</span>: <span class=s2>&#34;fs&#34;</span>,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;settings&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;location&#34;</span>: <span class=s2>&#34;path&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>拍摄快照</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 集群快照</span>
+</span></span><span class=line><span class=cl>PUT /_snapshot/my_backup/snapshot_cluster?wait_for_completion<span class=o>=</span><span class=nb>true</span>
+</span></span><span class=line><span class=cl><span class=c1># 索引快照</span>
+</span></span><span class=line><span class=cl>PUT /_snapshot/my_backup/snapshot_hamlet_index?wait_for_completion<span class=o>=</span><span class=nb>true</span>
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;indices&#34;</span>: <span class=s2>&#34;hamlet_*&#34;</span>,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;ignore_unavailable&#34;</span>: true,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;include_global_state&#34;</span>: false,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;metadata&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;taken_by&#34;</span>: <span class=s2>&#34;horin&#34;</span>,
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;taken_because&#34;</span>: <span class=s2>&#34;backup before restart&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>恢复索引快照</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST /_snapshot/my_backup/snapshot_hamlet_index/_restore
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li><li><p>快照常见操作</p><ul><li><p>查看所有快照库</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>GET /_snapshot/all
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>查看快照状态</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>GET /_snapshot/my_backup/snapshot_hamlet_index/_status
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>删除快照</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>DELETE /_snapshot/my_backup/snapshot_hamlet_index
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li><li><p>应用场景</p><ul><li><p>数据备份</p></li><li><p>集群迁移</p></li><li><p>复制生产数据</p></li><li><p>数据恢复</p></li><li><p>高可用性</p></li></ul></li></ul></li></ul></li><li><p>快照生命周期管理</p></li><li><p>跨集群检索</p></li></ul><h2 id=elasticsearch安全><a href=#elasticsearch安全 class=anchor-link><svg viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96.0-59.27-59.26-59.27-155.7.0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757.0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037.0 01-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482.0 0120.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96.0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454.0 0020.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037.0 00-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639.0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Elasticsearch安全</h2><ul><li><p>从6.8版本（尤其是7.1及以上版本）开始，Elasticsearch的基础级别安全功能永久免费，在Elasticsearch 8.X版本之后，安全功能不再是可选项，而是必须项</p></li><li><p>Elasticsearch的安全机制</p><ul><li><p>认证和授权：Elasticsearch支持基于用户名和密码的认证及授权机制</p></li><li><p>传输加密：Elasticsearch可以使用TLS（传输层安全）协议来加密网络传输</p></li><li><p>数据加密：Elasticsearch支持字段级别的加密（付费功能）</p></li><li><p>安全插件：Elasticsearch提供了一些安全插件（付费功能）</p></li></ul></li><li><p>安全使用Elasticsearch脚本</p><ul><li><p>脚本类型细分</p><ul><li><p>stored类型脚本：stored类型的脚本是先定义好脚本，将其存储起来，后续既可以使用，也可以不使用</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>	<span class=c1># 定义脚本</span>
+</span></span><span class=line><span class=cl>POST _scripts/sum_score_script
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;script&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;lang&#34;</span>: <span class=s2>&#34;painless&#34;</span>,
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;source&#34;</span>: <span class=s2>&#34;ctx._source.total_score = ctx._source.math_score + ctx._source.english_score&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=c1># 使用脚本</span>
+</span></span><span class=line><span class=cl>POST my_index/_update_by_query
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;script&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;id&#34;</span>: <span class=s2>&#34;sum_score_script&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;match_all&#34;</span>: <span class=o>{}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>inline类型脚本：inline类型脚本就是在使用时直接指定脚本，而不提前创建脚本</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST my_index/_update_by_query
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;script&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;lang&#34;</span>: <span class=s2>&#34;painless&#34;</span>,
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;source&#34;</span>: <span class=s2>&#34;ctx._source.total_score = ctx._source.math_score + ctx._source.english_score&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;match_all&#34;</span>: <span class=o>{}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li><li><p>脚本限制配置（在elasticsearch.yml中设置）</p><ul><li><p>脚本分级限制（script.allowed_types）：默认配置为<code>both</code>，即不做任何限制；将配置修改为<code>inline</code>或<code>stored</code>则表示限制只能执行指定类型的脚本；将配置修改为<code>none</code>，则表示完全禁止执行脚本</p></li><li><p>脚本可用范围（script.allowed_contexts）：默认为<code>none</code>，即不做任务限制；可以配置下选项有下面几种，如果需要同时允许多种选项，则可以用英文逗号进行分隔</p><ul><li><p>scoring：计算评分</p></li><li><p>update：更新</p></li><li><p>ingest processor：管道预处理</p></li><li><p>reindex：索引迁移</p></li><li><p>sort：排序</p></li><li><p>metric aggregation map：指标聚合</p></li><li><p>……</p></li></ul></li></ul></li></ul></li></ul><h2 id=elasticsearch运维><a href=#elasticsearch运维 class=anchor-link><svg viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96.0-59.27-59.26-59.27-155.7.0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757.0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037.0 01-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482.0 0120.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96.0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454.0 0020.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037.0 00-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639.0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Elasticsearch运维</h2><ul><li><p>Elasticsearch集群监控的维度及指标</p><ul><li><p>5个重要监控维度</p><ul><li><p>集群健康维度：分片和节点</p><ul><li><p>通过<code>GET _cluster/health</code>监视集群</p><ul><li><p>status：集群的状态，其中“红色”是指部分主分片未分配成功，“黄色”是指部分副本分片未分配成功，“绿色”是指所有分片均分配成功</p></li><li><p>active_primary_shards：集群中活动主分片的数量</p></li><li><p>relocating_shards：重定位分片数，指由于节点丢失而移动的分片计数</p></li><li><p>initializing_shards：初始化分片数，指由于添加索引而初始化的分片计数</p></li><li><p>unassigned_shards：未分配的分片数</p></li></ul></li></ul></li><li><p>搜索性能维度：请求率和延迟</p><ul><li><p>通过<code>GET index_a/_stats</code>查看对应目标索引状态</p><ul><li><p>query_current：集群当前正在处理的查询操作的计数</p></li><li><p>fetch_current：集群中正在进行的取回操作的计数</p></li><li><p>query_total：集群处理的所有查询的总数</p></li><li><p>query_time_in_millis：所有查询消耗的总时间</p></li><li><p>fetch_total：集群处理的所有取回操作的总数</p></li><li><p>fetch_time_in_millis：所有取回操作消耗的总时间</p></li></ul></li></ul></li><li><p>索引性能维度：刷新和合并时间</p><ul><li><p>通过<code>GET _nodes/stats</code>获取索引性能指标</p><ul><li><p>refresh.total：总刷新计数</p></li><li><p>refresh.total_time_in_millis：刷新总时间</p></li><li><p>merges.current_docs：当前的合并文档数</p></li><li><p>merges.total_docs：合并的总文档数</p></li><li><p>merges.total_stopped_time_in_millis：合并操作所消耗的总时间</p></li></ul></li></ul></li><li><p>节点运行状况维度：内存、磁盘和CPU指标</p><ul><li><p>通过<code>GET _cat/nodes?v&amp;h=id,disk.total,disk.used,disk.avail,disk.used_percent,ram.current,ram.percent,ram.max,cpu</code>获取节点运行指标</p><ul><li><p>disk.total：存储容量</p></li><li><p>disk.used：存储空间使用量</p></li><li><p>disk.avail：可用存储空间总量</p></li><li><p>disk.used_percent：已使用的存储空间的百分比</p></li><li><p>ram.current：当前内存使用量</p></li><li><p>ram.percent：当前内存使用百分比</p></li><li><p>ram.max：内存总量</p></li><li><p>cpu：CPU使用百分比</p></li></ul></li></ul></li><li><p>JVM运行状况维度：GC和堆内存使用率</p><ul><li><p>通过<code>GET /_nodes/stats</code>命令检索JVM度量标准</p><ul><li><p>jvm.mem：内存使用情况</p></li><li><p>jvm.threads：当前使用的线程数和最大线程数</p></li><li><p>jvm.gc：垃圾收集相关指标</p></li></ul></li></ul></li></ul></li></ul></li><li><p>集群故障排查及修复指南</p><ul><li><p>如何定位红色或黄色的索引</p><ul><li><p>确定我们所能知道的主要问题</p></li><li><p>确定哪些索引有问题，多少索引有问题</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>GET _cat/indices?v<span class=p>&amp;</span><span class=nv>health</span><span class=o>=</span>yellow
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>查看有问题的分片及其原因</p><ul><li><p>v：显示表头</p></li><li><p>h：指定要在结果中显示的列</p></li><li><p>s：指定对结果进行排序的列</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>GET _cat/shards?v<span class=p>&amp;</span><span class=nv>h</span><span class=o>=</span>n,index,shard,prirep,state,sto,sc,unassigned.reason,unassigned.details<span class=p>&amp;</span><span class=nv>s</span><span class=o>=</span>sto,index
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li><li><p>进一步定位未分配的原因</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>GET _cluster/allocation/explain
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl><span class=s2>&#34;index&#34;</span>: <span class=s2>&#34;my_index&#34;</span>,
+</span></span><span class=line><span class=cl><span class=s2>&#34;shard&#34;</span>: 0,
+</span></span><span class=line><span class=cl><span class=s2>&#34;primary&#34;</span>: <span class=nb>false</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>对症下药，解决问题</p></li></ul></li></ul></li><li><p>运维及故障诊断的常用命令</p><ul><li><p>集群节点下线：保证集群颜色绿色的前提下，使某个节点优雅下线</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>PUT _cluster/settings
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;transient&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;cluster.routing.allocation.exclude_ip&#34;</span>: <span class=s2>&#34;127.0.0.1&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>强制刷新：刷新索引可以确保当前仅存储在事务日志中的所有数据也永久存储在Lucene索引中</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST _flush
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>更改并发分片的数量以平衡集群：控制在集群范围内有多少并发分片，以达到重新平衡，默认值为2</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>PUT _cluster/settings
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;transient&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;cluster.routing.allocation.cluster_concurrent_rebalance&#34;</span>: <span class=m>2</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>更改每个节点同时恢复的分片数量：如果节点已从集群断开连接，则其所有分片都将变为未分配状态。经过一定的延迟后，分片将被分配到其他位置。每个节点要恢复的并发分片数由该设置确定</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>PUT _cluster/settings
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;transient&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;cluster.routing.allocation.node_concurrent_recoveries&#34;</span>: <span class=m>6</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>调整恢复速度：为了避免集群过载，Elasticsearch限制了恢复速度</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>PUT _cluster/settings
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;transient&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;indices.recovery.max_byte_per_sec&#34;</span>: <span class=s2>&#34;80mb&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>清除节点上的缓存：如果节点达到较高的堆内存值，则可以在节点级别上调用如下API以使Elasticsearch清理缓存。这会降低性能，但可以摆脱内存不足引发的OOM的困扰</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST _cache/clear
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>调整断路器：为了避免Elasticsearch OOM，可以调整断路器上的设置。这将限制搜索所占用的内存，并舍弃所有估计消耗内存会超出阈值的搜索请求</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>PUT _cluster/settings
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;transient&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;indices.breaker.total.limit&#34;</span>: <span class=s2>&#34;40%&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>集群迁移：集群数据迁移、索引数据迁移等</p><ul><li><p>方案一：针对索引部分或者全部数据执行reindex指令</p></li><li><p>借助第三方工具（如elasticdump和elasticsearch-migration）迁移索引或者集群，本质上是一种“scroll+bulk”方案的实现</p></li></ul></li><li><p>集群数据备份和恢复：对于高可用业务场景，定期增量、全量数据备份</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 索引快照</span>
+</span></span><span class=line><span class=cl>PUT /_snapshot/my_backup/snapshot_hamlet_index?wait_for_completion<span class=o>=</span><span class=nb>true</span>
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;indices&#34;</span>: <span class=s2>&#34;hamlet_*&#34;</span>,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;ignore_unavailable&#34;</span>: true,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;include_global_state&#34;</span>: false,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;metadata&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;taken_by&#34;</span>: <span class=s2>&#34;horin&#34;</span>,
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;taken_because&#34;</span>: <span class=s2>&#34;backup before restart&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=c1># 恢复索引</span>
+</span></span><span class=line><span class=cl>POST /_snapshot/my_backup/snapshot_hamlet_index/_restore
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li><li><p>Elasticsearch日志</p><ul><li><p>作用是什么？进行集群状态监测和故障诊断</p></li><li><p>默认路径是什么？$ES_HOME/logs</p></li><li><p>基于什么组件实现的？Log4j2</p></li><li><p>配置文件是什么？log4j2.properties</p></li><li><p>配置内容主要是什么？命名规范、日志随日期滚动策略（日志大小等条件设置）等</p></li><li><p>日志的级别如何划分？TRACE→DEBUG→INFO→WARN→ERROR→FATAL</p></li><li><p>日志级别调整方式有什么？</p><ul><li><p>方式一：支持动态更新，无须重启</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>PUT _cluster/settings
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;persistent&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;logger.org.elasticsearch.discovery&#34;</span>: <span class=s2>&#34;DEBUG&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>方式二：elasticsearch.yml配置（静态配置方式，重启后生效）</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>logger.org.elasticsearch.discovery: DEBUG
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>方式三：log4j2.properties配置（静态配置方式，重启后生效）</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>logger.discovery.name <span class=o>=</span> org.elasticsearch.discovery
+</span></span><span class=line><span class=cl>logger.discovery.level <span class=o>=</span> DEBUG
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li><li><p>slowlog：指慢日志，又可以分为慢检索日志和慢写入日志</p></li></ul></li></ul><h2 id=elasticsearch核心工作原理><a href=#elasticsearch核心工作原理 class=anchor-link><svg viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96.0-59.27-59.26-59.27-155.7.0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757.0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037.0 01-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482.0 0120.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96.0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454.0 0020.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037.0 00-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639.0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Elasticsearch核心工作原理</h2><ul><li><p>Elasticsearch文档版本冲突（本质：老版本覆盖掉了新版本）</p><ul><li><p>创建场景的版本冲突</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 重复执行create会出现冲突</span>
+</span></span><span class=line><span class=cl>POST my_index_1501/_create/1
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl><span class=s2>&#34;title&#34;</span>: <span class=s2>&#34;hello&#34;</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>批量更新场景的版本冲突</p></li><li><p>批量删除场景的版本冲突</p></li></ul></li><li><p>如何解决或避免Elasticsearch文档版本冲突</p><ul><li><p>利用external对版本号进行外部控制</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST my_index_1501/_doc/1?version<span class=o>=</span>2<span class=p>&amp;</span><span class=nv>version_type</span><span class=o>=</span>external
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl><span class=s2>&#34;title&#34;</span>: <span class=s2>&#34;hello2&#34;</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>利用if_seq_no和if_primary_term作为唯一标识来避免版本冲突</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 查看_seq_no和_primary_term</span>
+</span></span><span class=line><span class=cl>GET my_index_1501/_doc/1
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 基于获取到的_seq_no和_primary_term进行更新</span>
+</span></span><span class=line><span class=cl>POST my_index_1501/_doc/1?if_seq_no<span class=o>=</span>2<span class=p>&amp;</span><span class=nv>if_primary_term</span><span class=o>=</span><span class=m>1</span>
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl><span class=s2>&#34;title&#34;</span>: <span class=s2>&#34;hello2&#34;</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>批量更新和批量删除中通过proceed忽略冲突</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST my_index_1501/_update_by_query?conflicts<span class=o>=</span>proceed
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	...
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li><li><p>Elasticsearch文档更新/删除的原理</p><ul><li><p>更新/删除操作时文档版本号的变化</p><ul><li><p>更新、删除操作实际是在原来文档的版本号基础上加1，且每执行一次，版本号进行一次加1操作</p></li><li><p>原来老版本的文档被标记为“已删除”状态</p></li></ul></li><li><p>文档删除、索引删除和文档更新的本质</p><ul><li><p>文档删除的本质：本质上是逻辑删除而非物理删除，文档被删除时，文档版本+1且标识为“已删除”，等到段合并时才会从磁盘上删除这些文档</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 强制执行段合并，only_expunge_deletes**表示**只清除已标记为“已删除”的文档</span>
+</span></span><span class=line><span class=cl>POST my_index/_forcemerge?only_expunge_deletes
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>索引删除的本质：本质上是物理删除，索引删除包含两个步骤：更新集群、将分片从磁盘删除</p></li><li><p>文档更新的本质：本质上是“delete+add”操作，将旧文档标记为“已删除”，并增加一个全新的文档</p></li></ul></li></ul></li><li><p>Elasticsearch写入的原理</p><ul><li><p>核心概念</p><ul><li><p>分段：在Elasticsearch中，段是由一些倒排索引和一些元数据组成的。分段是将索引分成多个小段的过程，每个分段包含一部分索引数据</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>GET my_index/_segments
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>事务日志文件：一个文档被索引之后，Elasticsearch就会将其添加到内存缓冲区，并且同时写入事务日志文件(translog)中。translog的作用是保证数据的可靠性和一致性</p></li><li><p>倒排索引是不可变的：已写入磁盘的倒排索引永远不会改变</p></li><li><p>段是不可变的：段一旦被创建，就不能被修改，任何对索引的更改都会生成新的段</p></li></ul></li><li><p>写入的实现流程</p><ul><li><p>客户端向主节点发送写数据请求，主节点充当协调节点的角色</p></li><li><p>主节点使用文档ID确认文档所属分片，将请求转发到主分片所属的节点</p></li><li><p>在主分片上面执行写入操作，如果写入成功，将请求并行转发到副本分片上，并向协调节点报告写入成功</p></li><li><p>协调节点向客户端报告写入结果</p></li></ul></li><li><p>refresh和flush操作</p><ul><li><p>refresh操作</p><ul><li><p>将文档插入Elasticsearch时，文档会被写入内存缓冲区中，然后通过refresh（刷新）操作定期从该缓冲区刷新到内存段中。刷新频率由refresh_interval参数控制，默认1s。</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>PUT my_index
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;settings&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;index&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;refresh_interval&#34;</span>: <span class=s2>&#34;60s&#34;</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>refresh操作在本质上是将写入数据由内存缓冲区写入内存段中，以保证搜索可见</p></li></ul></li><li><p>flush操作</p><ul><li><p>当新的文档写入后，写入索引缓冲区(index buffer)的同时会写入事务日志，当flush操作后事务日志才可清空</p></li><li><p>flush操作将文件系统缓存(filesystem cache)写入磁盘，以达到持久化的目的</p></li></ul></li></ul></li></ul></li><li><p>Elasticsearch段合并的原理</p><ul><li><p>段的基础知识</p><ul><li><p>一个集群包含一个或多个节点</p></li><li><p>一个节点包含一个或多个索引</p></li><li><p>一个索引由一个或多个分片组成</p></li><li><p>一个分片对应一个Lucene索引</p></li><li><p>一个分片包含多个段，每个段是一个倒排索引，查询时会把所有段的查询结果汇总，并将其作为最终分片的查询结果，每个段时磁盘中的单个文件</p></li></ul></li><li><p>段合并</p><ul><li><p>将一些大小相似的段合并成更大的段，段合并的时候会将那些旧的已删除文档从文件系统中清除</p></li><li><p>作用</p><ul><li><p>提高搜索效率：合并后的大段可以减少查询时需要扫描的段的数量，从而提高搜索效率</p></li><li><p>释放空间：合并后的段可以减少占用的磁盘空间，从而释放空间，减少硬盘的IO开销</p></li><li><p>优化索引结构：段合并后可以优化索引结构，减少冗余数据，从而进一步提高搜索效率</p></li></ul></li><li><p>潜在问题</p><ul><li><p>资源消耗率高：段合并操作需要占用系统资源，例如CPU、内存、磁盘资源等</p></li><li><p>磁盘碎片增多：段合并操作可能导致磁盘碎片，因为合并后的段可能不是连续的，而是由多个不连续的片段组成的</p></li><li><p>写入或检索延迟大：如果进行段合并操作时需要合并的段数量过多，可能会导致合并操作的时间较长，从而延迟写入操作和搜索操作</p></li><li><p>极端情况下索引不可用：如果段合并操作失败或被中断，则可能会导致索引不可用，需要进行恢复操作</p></li></ul></li><li><p>段合并问题的优化建议</p><ul><li><p>在非业务密集时间段实施段合并操作</p></li><li><p>如果对数据的实时性要求并不严格，建议将refresh_interval参数设置为30s或更长</p></li><li><p>根据CPU核心数量调整index.merge.scheduler.max_thread_count参数</p></li></ul></li></ul></li></ul></li><li><p>Elasticsearch检索的原理</p><ul><li><p>核心步骤</p><ul><li><p>客户端发起请求</p></li><li><p>在主节点或协调节点中，需要验证查询主体</p></li><li><p>选择要在查询中使用的索引，根据路由机制选择待检索的分片（主分片或者副本分片）</p></li><li><p>在数据节点中执行查询操作，以收集精准匹配结果或者满足条件的结果</p></li><li><p>接收第四步的结果，在协调节点做结果整合，并计算相关性评分</p></li><li><p>将结果返回给用户</p></li></ul></li></ul></li></ul><h2 id=elasticsearch性能优化><a href=#elasticsearch性能优化 class=anchor-link><svg viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96.0-59.27-59.26-59.27-155.7.0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757.0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037.0 01-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482.0 0120.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96.0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454.0 0020.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037.0 00-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639.0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Elasticsearch性能优化</h2><ul><li><p>Elasticsearch性能指标</p><ul><li><p>硬件性能指标：包括CPU使用率、内存使用率、磁盘IO读写速度、网络带宽等</p></li><li><p>Elasticsearch内部指标：包括响应时间、吞吐量、并发数、负载等</p><ul><li><p>响应时间：指从客户端发出请求到Elasticsearch返回结果所需的时间</p></li><li><p>吞吐量：指在一段时间内Elasticsearch处理的请求数量</p></li><li><p>并发数：指同时连接到Elasticsearch的客户端数量</p></li><li><p>负载：指Elasticsearch系统中正在处理的请求数量，包括正在进行的搜索、索引、聚合和删除数据等操作</p></li></ul></li><li><p>网络指标：包括网络延迟、带宽、吞吐量等</p></li></ul></li><li><p>Elasticsearch通用的性能优化建议</p><ul><li><p>版本选型：考虑当下，兼顾未来</p><ul><li><p>功能要求</p></li><li><p>稳定性和性能</p></li><li><p>兼容性</p></li><li><p>安全性</p></li></ul></li><li><p>确保集群健康状态</p></li><li><p>硬件资源匹配到位</p><ul><li><p>足够内存</p></li><li><p>SSD</p></li><li><p>多核CPU</p></li></ul></li><li><p>合理进行集群配置</p><ul><li><p>各节点尽量不要和其他业务功能共用一台机器</p></li><li><p>若集群节点数小于或者等于3个，则建议采用默认节点角色；若集群节点数多于3个，则建议根据业务场景需要逐步独立出主节点角色、数据节点角色和协调节点角色</p></li><li><p>调整分片和副本数</p></li><li><p>调整索引刷新频率</p></li><li><p>合理使用缓存</p></li></ul></li><li><p>集群安全为第一要务</p><ul><li><p>防火墙</p></li><li><p>认证授权</p></li><li><p>TLS/SSL加密</p></li><li><p>安全补丁更新</p></li></ul></li><li><p>务必提前做好集群监控</p><ul><li><p>监控硬件资源</p></li><li><p>监控Elasticsearch集群状态</p></li><li><p>监控日志</p></li><li><p>监控性能指标</p></li><li><p>监控异常情况</p></li></ul></li><li><p>用Elasticsearch处理匹配场景下的合理需求</p><ul><li><p>文本搜索和聚合</p></li><li><p>倒排索引</p></li><li><p>分布式架构</p></li><li><p>写入前预处理</p></li></ul></li></ul></li><li><p>Elasticsearch写入优化</p><ul><li><p>写入优化建议</p><ul><li><p>写入时先将副本分片数置为0，完成写入后再将其复原</p></li><li><p>优先使用系统自动生成ID的方式（手动指定ID的方式会多一次查询）</p></li><li><p>合理调整刷新频率</p></li><li><p>合理调整堆内存中的索引缓冲区大小（index.index_buffer_size，默认值为堆内存的10%）</p></li><li><p>给堆外的内存留够空间</p></li><li><p>批量写入而非单个文档写入</p></li><li><p>多线程并发写入</p></li><li><p>合理设置线程池和队列大小</p></li><li><p>设置合理的映射</p></li><li><p>合理使用分词器</p></li><li><p>必要时使用SSD</p></li><li><p>合理设置集群节点角色</p></li><li><p>推荐使用官方客户端的API</p></li></ul></li><li><p>写入过程监控</p><ul><li><p>索引率：索引率是指每秒写入Elasticsearch的文档数，是衡量集群写入性能的关键指标</p></li><li><p>查询速率：查询速率表示每秒的查询次数，反映了Elasticsearch集群的读取性能</p></li></ul></li></ul></li><li><p>Elasticsearch检索优化</p><ul><li><p>全量数据和大文档处理的优化建议</p><ul><li><p>不要返回全量或近全量数据</p></li><li><p>避免使用大文档</p></li></ul></li><li><p>数据建模层面的优化建议</p><ul><li><p>文档结构务必规范、一致</p></li><li><p>设置合理的分片数和副本数</p><ul><li><p>主分片一般建议设置为数据节点的1～3倍</p></li><li><p>对于一般的非高可用场景，一个副本基本足够</p></li></ul></li><li><p>多使用写入前预处理操作</p></li><li><p>合理使用边写入边排序机制</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 创建索引时指定排序顺序</span>
+</span></span><span class=line><span class=cl>PUT my_index
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;settings&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;index&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;sort.field&#34;</span>: <span class=s2>&#34;date&#34;</span>,
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;sort.order&#34;</span>: <span class=s2>&#34;desc&#34;</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;mappings&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;properties&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;date&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;type&#34;</span>: <span class=s2>&#34;date&#34;</span>
+</span></span><span class=line><span class=cl>			<span class=o>}</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>多表关联按需选型</p></li></ul></li><li><p>检索方法层面的优化建议</p><ul><li><p>尽可能减少检索字段数目</p></li><li><p>合理设置size值</p></li><li><p>尽量使用keyword字段类型</p></li><li><p>尽量避免使用脚本</p></li><li><p>有效使用filter缓存</p></li><li><p>对历史索引数据不定期进行段合并（不要对正在写入数据的索引进行段合并）</p></li><li><p>预热文件系统缓存</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>PUT my_index
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;settings&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;index.store.preload&#34;</span>: <span class=o>[</span><span class=s2>&#34;nvd&#34;</span>, <span class=s2>&#34;dvd&#34;</span><span class=o>]</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>通过perference优化缓存利用率</p></li><li><p>避免使用wildcard检索（推荐在前期使用预处理Ngram分词，以空间换时间来解决问题）</p></li><li><p>尽量避免使用正则匹配检索</p></li><li><p>谨慎使用全量聚合和多重嵌套聚合</p></li></ul></li><li><p>性能优化的DSL命令行</p><ul><li><p>未分配分片查看</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>GET _cat/shards?v<span class=p>&amp;</span><span class=nv>h</span><span class=o>=</span>index,shard,prirep,state,unassigned.reason<span class=p>&amp;</span><span class=nv>s</span><span class=o>=</span>state:asc
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>动态调整副本数</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>PUT my_index/_settings
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;number_of_replicas&#34;</span>: <span class=m>0</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>重新打开分片分配策略</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 开启Elasticsearch集群的分片分配策略，允许分片在节点间重新分配</span>
+</span></span><span class=line><span class=cl>PUT _cluster/settings
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;cluster.routing.allocation.enable&#34;</span>: <span class=s2>&#34;all&#34;</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>手动移动未分配的分片</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST _cluster/reroute
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;commands&#34;</span>: <span class=o>[</span>
+</span></span><span class=line><span class=cl>		<span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;move&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;index&#34;</span>: <span class=s2>&#34;my_index&#34;</span>,
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;shard&#34;</span>: 0,
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;from_node&#34;</span>: <span class=s2>&#34;node1&#34;</span>,
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;to_node&#34;</span>: <span class=s2>&#34;node2&#34;</span>
+</span></span><span class=line><span class=cl>			<span class=o>}</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>,
+</span></span><span class=line><span class=cl>		<span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;allocate_replica&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;index&#34;</span>: <span class=s2>&#34;my_index&#34;</span>,
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;shard&#34;</span>: 1,
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;node&#34;</span>: <span class=s2>&#34;node3&#34;</span>
+</span></span><span class=line><span class=cl>			<span class=o>}</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>]</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>查看磁盘使用率</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>GET _cat/allocation?v
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>查看各个节点的版本号</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>GET _cat/nodes?v<span class=p>&amp;</span><span class=nv>h</span><span class=o>=</span>host,name,version
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>检索优化实战</p><ul><li><p>慢日志设置</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>PUT my_index/_settings
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;index.search.slowlog.threshold.query.warn&#34;</span>: <span class=s2>&#34;10s&#34;</span>,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;index.search.slowlog.threshold.query.info&#34;</span>: <span class=s2>&#34;5s&#34;</span>,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;index.search.slowlog.threshold.query.debug&#34;</span>: <span class=s2>&#34;2s&#34;</span>,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;index.search.slowlog.threshold.query.trace&#34;</span>: <span class=s2>&#34;500ms&#34;</span>,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;index.search.slowlog.threshold.fetch.warn&#34;</span>: <span class=s2>&#34;1s&#34;</span>,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;index.search.slowlog.threshold.fetch.info&#34;</span>: <span class=s2>&#34;800ms&#34;</span>,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;index.search.slowlog.threshold.fetch.debug&#34;</span>: <span class=s2>&#34;500ms&#34;</span>,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;index.search.slowlog.threshold.fetch.trace&#34;</span>: <span class=s2>&#34;200ms&#34;</span>,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;index.search.slowlog.level&#34;</span>: <span class=s2>&#34;info&#34;</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>段合并</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST my_index/_forcemerge
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li><li><p>写入优化实战</p><ul><li><p>批量写入</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>PUT _bulk
+</span></span><span class=line><span class=cl><span class=o>{</span><span class=s2>&#34;index&#34;</span>: <span class=o>{</span><span class=s2>&#34;_index&#34;</span>: <span class=s2>&#34;my_index&#34;</span><span class=o>}}</span>
+</span></span><span class=line><span class=cl><span class=o>{</span><span class=s2>&#34;field&#34;</span>: <span class=s2>&#34;value&#34;</span><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>提高刷新频率</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>PUT my_index/_settings
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;index&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;refresh_interval&#34;</span>: <span class=s2>&#34;30s&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>将副本数设置为0</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>PUT my_index/_settings
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;number_of_replicas&#34;</span>: <span class=m>0</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>通过translog命令进行异步刷盘</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>PUT my_index/_settings
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;index&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;translog&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;durability&#34;</span>: <span class=s2>&#34;async&#34;</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li></ul></li></ul></li></ul><h2 id=elasticsearch实战避坑指南><a href=#elasticsearch实战避坑指南 class=anchor-link><svg viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96.0-59.27-59.26-59.27-155.7.0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757.0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037.0 01-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482.0 0120.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96.0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454.0 0020.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037.0 00-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639.0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Elasticsearch实战“避坑”指南</h2><ul><li><p>分片及副本设置建议</p><ul><li><p>分片数和节点数应该相对平衡</p></li><li><p>设置total_shards_per_node，将索引压力分摊至多个节点</p></li><li><p>尽量保证每个分片大小一致</p></li><li><p>主分片设置参考准则</p><ul><li><p>设置合理的主分片数目。建议设置为节点数目的1倍到3倍（结合业务场景和集群规模），以确保每个节点都有分片</p></li><li><p>避免将主分片数目设置得太高或太低</p></li><li><p>监控主分片的状态和性能，使用Elasticsearch监控工具来及时发现和解决问题</p></li><li><p>考虑主分片的恢复时间，避免主分片过大导致恢复时间过长，从而影响索引的可靠性</p></li></ul></li><li><p>副本分片设置参考准则</p><ul><li><p>设置合理的副本分片数目。建议至少设置1个副本</p></li><li><p>避免在节点数目较少的情况下设置过多的副本分片</p></li></ul></li></ul></li><li><p>25个核心Elasticsearch默认值</p><ul><li><p>参数类型</p><ul><li><p>集群级别参数</p><ul><li><p>举例1：<code>cluster.max_shards_per_node</code>，前缀是cluster.*，修改针对集群生效</p></li><li><p>举例2：<code>indices.query.bool.max_clause_count</code>，需要在elasticsearch.yml配置文件中设置，重启Elasticsearch后生效</p></li></ul></li><li><p>索引级别参数</p><ul><li>举例：<code>index.number_of_shards</code>，前缀是index.*，修改针对索引生效</li></ul></li></ul></li><li><p>区分静态参数和动态参数</p><ul><li><p>静态参数，如主分片数<code>index.number_of_shards</code>，在索引创建之后就不能更改，除非重建索引</p></li><li><p>动态参数，如副本分片数<code>index.number_of_replicas</code>，允许在任何时候进行动态调整，可以通过update API进行操作</p></li></ul></li><li><p>6个Elasticsearch集群级别参数的关键默认值</p><ul><li><p>boolean类型默认支持的最大子句个数</p><ul><li>对应参数为<code>indices.query.bool.max_clause_count</code>，为静态参数（需要在elasticsearch. yml中设置），默认最大为1024</li></ul></li><li><p>数据节点支持的默认分片个数</p><ul><li>对应参数为<code>cluster.max_shards_per_node</code>，默认最大为1000（7.X版本后）</li></ul></li><li><p>堆内存中索引缓冲区的默认比例</p><ul><li>对应参数为<code>indices.memory.index_buffer_size</code>、<code>indices.memory.min_index_buffer_size</code>、<code>indices.memory.max_index_buffer_size</code>，均为静态参数（需要在elasticsearch.yml中设置）。<code>indices.memory.index_buffer_size</code>的默认值为10%，<code>indices.memory.min_index_buffer_size</code>的默认值为48 MB</li></ul></li><li><p>默认磁盘使用率</p><ul><li>对应参数为<code>cluster.routing.allocation.disk.watermark.low/high/flood_stage</code>，为集群动态参数。<code>cluster.routing.allocation.disk.watermark.low</code>默认为85%，<code>cluster.routing.allocation.disk.watermark.high</code>默认为90%，<code>cluster.routing.allocation.disk.watermark.flood_stage</code>默认为95%</li></ul></li><li><p>默认GC方式</p><ul><li>对应参数为<code>-XX:+UseConcMarkSweepGC</code>、<code>-XX:CMSInitiatingOccupancyFraction=75</code>、<code>-XX:+UseCMSInitiatingOccupancyOnly</code></li></ul></li></ul></li><li><p>7个Elasticsearch索引级别参数的关键默认值</p><ul><li><p>默认主分片的大小</p><ul><li>对应参数为<code>index.number_of_shards</code>，为静态参数，默认值为1；单索引支持最大分片数为1024</li></ul></li><li><p>默认的压缩算法</p><ul><li>对应参数为<code>index.codec</code>，为静态参数，默认值为LZ4</li></ul></li><li><p>默认副本分片个数</p><ul><li>对应参数为<code>index.number_of_replicas</code>，为动态参数，默认值为1</li></ul></li><li><p>默认刷新频率</p><ul><li>对应参数为<code>index.refresh_interval</code>，为动态参数，默认最小值为1s</li></ul></li><li><p>terms默认支持最大长度</p><ul><li>对应参数为<code>index.max_terms_count</code>，为动态参数，默认最大值为65536</li></ul></li><li><p>默认返回的最大搜索结果数</p><ul><li>对应参数为<code>index.max_result_window</code>，为动态参数，默认最大值为10000</li></ul></li><li><p>默认预处理管道</p><ul><li>对应参数为<code>index.default_pipeline</code>，为动态参数，默认自定义管道</li></ul></li></ul></li><li><p>4个Elasticsearch映射级别参数的关键默认值</p><ul><li><p>默认支持的最大字段数</p><ul><li>对应参数为<code>index.mapping.total_fields.limit</code>，为动态参数，默认最大值为1000</li></ul></li><li><p>Mapping字段默认的最大深度</p><ul><li>对应参数为<code>index.mapping.depth.limit</code>，为动态参数，默认最大值为20</li></ul></li><li><p>默认支持的Nested类型个数</p><ul><li><p>对应参数为<code>index.mapping.nested_fields.limit</code>，表示一个索引所支持的最大Nested类型个数，默认值为50；以及<code>index.mapping.nested_objects.limit</code>，表示一个Nested类型所支持的最大对象数，默认值为10000</p></li><li><p>如果子文档频繁更新，则建议使用父子文档。如果子文档不频繁更新但查询频繁，则建议采用Nested类型</p></li></ul></li><li><p>动态映射条件下默认匹配的字符串类型</p><ul><li>字符串类型默认为“text+keyword”类型</li></ul></li></ul></li><li><p>8个其他关键默认值</p><ul><li><p>Elasticsearch默认的评分机制</p><ul><li>默认为BM25</li></ul></li><li><p>Elasticsearch keyword类型默认支持的字符数</p><ul><li>keyword类型支持的最大长度为32766个UTF-8字符，而text类型对字符长度没有限制。设置ignore_above后，超过给定长度的数据将不被索引，无法通过term检索返回结果</li></ul></li><li><p>Elasticsearch集群节点默认属性值</p></li><li><p>Elasticsearch客户端默认请求节点</p><ul><li>如果不明确指定协调节点，则由默认请求的节点充当协调节点的角色。每个节点都是一个隐式的协调节点</li></ul></li><li><p>Elasticsearch默认分词器</p><ul><li>在不明确指定分词器的场景，默认采用标准分词器（standard）</li></ul></li><li><p>Elasticsearch聚合默认UTC时间</p></li><li><p>Elasticsearch默认堆内存大小</p><ul><li>Elasticsearch 8.X版本的默认堆内存大小是4GB</li></ul></li><li><p>Elasticsearch默认集成JDK</p></li></ul></li></ul></li><li><p>Elasticsearch线程池和队列</p><ul><li><p>查看线程池全貌</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>GET _cat/thread_pool?v<span class=p>&amp;</span><span class=nv>h</span><span class=o>=</span>id,name,active,rejected,completed,size,type<span class=p>&amp;</span>pretty<span class=p>&amp;</span><span class=nv>s</span><span class=o>=</span><span class=nb>type</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>Elasticsearch根据在每个节点中检测到的线程数（即number of processors）自动配置线程池参。如果检测失败，则应在elasticsearch.yml中显式设置硬件中可用的线程数</p></li><li><p>线程池实战问题及注意事项</p><ul><li><p>修改线程池和队列需要更改配置文件elasticsearch.yml</p></li><li><p>集群拒绝请求的原因可能有多种</p></li><li><p>写入批量值的递进步长调优</p></li></ul></li></ul></li><li><p>Elasticsearch热点线程</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>GET _nodes/hot_threads
+</span></span><span class=line><span class=cl>GET _nodes/&lt;node_id&gt;/hot_threads
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>规划Elasticsearch集群规模和容量（略）</p></li><li><p>Elasticsearch Java客户端选型（略）</p></li><li><p>Elasticsearch缓存</p><ul><li><p>节点查询缓存(node query cache)</p><ul><li><p>应用场景和缓存条件</p><ul><li><p>适用于term检索和filter检索</p></li><li><p>在Elasticsearch中，对于一个分片内的特定段，只有当该段至少含有10000个文档且段中的文档数量超过了该分片总文档数的3%时，它才会被纳入缓存中</p></li></ul></li><li><p>缓存配置</p><ul><li><p><code>indices.queries.cache.size</code>：该配置用于控制filter缓存的堆内存大小，可以是百分比值（例如5%）或精确值（例如512MB），默认为10%，该配置为静态配置，需要在集群的每个数据节点进行配置</p></li><li><p><code>ndex.queries.cache.enabled</code>：该配置用于控制是否启用节点查询缓存，只能在创建索引或者关闭索引时进行设置，默认为true，该配置为静态配置</p></li></ul></li></ul></li><li><p>分片请求缓存(shard request cache)</p><ul><li><p>应用场景和缓存条件</p><ul><li><p>适用于日志用例场景，在这种情况下，数据不会在旧索引上更新</p></li><li><p>默认情况下，分片请求缓存仅缓存size=0的搜索请求的结果</p></li></ul></li><li><p>缓存配置</p><ul><li><code>index.requests.cache.size</code>：该配置用于控制分片缓存的堆内存大小，默认为1%，该配置为静态配置，需要在集群的每个数据节点进行配置</li></ul></li></ul></li><li><p>字段缓存</p></li></ul></li><li><p>Elasticsearch数据建模</p><ul><li><p>基于业务建模</p></li><li><p>基于数据量建模</p></li><li><p>基于设置层面建模</p></li><li><p>基于映射层面建模</p><ul><li><p>字段命名要规范</p></li><li><p>字段类型要合理</p></li><li><p>分词器要灵活</p></li><li><p>多字段类型灵活使用</p></li></ul></li><li><p>基于复杂索引关联建模</p></li></ul></li><li><p>利用JMeter进行Elasticsearch性能测试（略）</p></li></ul></div></article><div class=related-posts><h2 class=related-title>相关文章：<svg viewBox="0 0 512 512" class="icon related-icon"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm144 276c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6.0-12-5.4-12-12v-92h-92c-6.6.0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6.0 12 5.4 12 12v92h92c6.6.0 12 5.4 12 12v56z"/></svg></h2><ul class=related-list><li class=related-item><a href=/posts/2024-08-19-learning_es_1_2/ class=related-link>书籍学习-一本书讲透Elasticsearch：原理、进阶和工程实践（二）</a></li><li class=related-item><a href=/posts/2024-08-19-learning_es_1_1/ class=related-link>书籍学习-一本书讲透Elasticsearch：原理、进阶和工程实践（一）</a></li><li class=related-item><a href=/posts/2022-11-01-learning_mysql_45_3/ class=related-link>专栏学习-MySQL实战45讲（三）</a></li><li class=related-item><a href=/posts/2022-11-01-learning_mysql_45/ class=related-link>专栏学习-MySQL实战45讲（二）</a></li><li class=related-item><a href=/posts/2022-10-19-learning_jvm_2/ class=related-link>书籍学习-深入理解Java虚拟机（二）</a></li></ul></div><div class=post-tags><a href=/tags/elasticsearch/ rel=tag class=post-tags-link><svg viewBox="0 0 512 512" class="icon tag-icon"><path d="M0 252.118V48C0 21.49 21.49.0 48 0h204.118a48 48 0 0133.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137.0 67.882L293.823 497.941c-18.745 18.745-49.137 18.745-67.882.0L14.059 286.059A48 48 0 010 252.118zM112 64c-26.51.0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48z"/></svg>ElasticSearch</a>
+<a href=/tags/es/ rel=tag class=post-tags-link><svg viewBox="0 0 512 512" class="icon tag-icon"><path d="M0 252.118V48C0 21.49 21.49.0 48 0h204.118a48 48 0 0133.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137.0 67.882L293.823 497.941c-18.745 18.745-49.137 18.745-67.882.0L14.059 286.059A48 48 0 010 252.118zM112 64c-26.51.0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48z"/></svg>ES</a></div><ul class=post-nav><li class=post-nav-next><a href=/posts/2024-08-19-learning_es_1_2/ rel=next>书籍学习-一本书讲透Elasticsearch：原理、进阶和工程实践（二） ></a></li></ul><div id=utterances></div></div></main><div id=back-to-top class=back-to-top><a href=#><svg viewBox="0 0 448 512" class="icon arrow-up"><path d="M34.9 289.5l-22.2-22.2c-9.4-9.4-9.4-24.6.0-33.9L207 39c9.4-9.4 24.6-9.4 33.9.0l194.3 194.3c9.4 9.4 9.4 24.6.0 33.9L413 289.4c-9.5 9.5-25 9.3-34.3-.4L264 168.6V456c0 13.3-10.7 24-24 24h-32c-13.3.0-24-10.7-24-24V168.6L69.2 289.1c-9.3 9.8-24.8 10-34.3.4z"/></svg></a></div><footer id=footer class=footer><div class=footer-inner><div class=site-info>©&nbsp;2021–2024&nbsp;<svg viewBox="0 0 512 512" class="icon footer-icon"><path d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3.0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"/></svg>&nbsp;Yanbin Lin</div><div class=powered-by>Powered by <a href=https://github.com/gohugoio/hugo target=_blank rel=noopener>Hugo</a> | Theme is <a href=https://github.com/reuixiy/hugo-theme-meme target=_blank rel=noopener>MemE</a></div><div class=site-copyright>在保留本文作者及本文链接的前提下，非商业用途随意转载分享</div><ul class=socials><li class=socials-item><a href=/rss.xml target=_blank rel="external noopener" title=RSS><svg viewBox="0 0 24 24" class="icon social-icon"><path d="M19.199 24C19.199 13.467 10.533 4.8.0 4.8V0c13.165.0 24 10.835 24 24h-4.801zM3.291 17.415c1.814.0 3.293 1.479 3.293 3.295.0 1.813-1.485 3.29-3.301 3.29C1.47 24 0 22.526.0 20.71s1.475-3.294 3.291-3.295zM15.909 24h-4.665c0-6.169-5.075-11.245-11.244-11.245V8.09c8.727.0 15.909 7.184 15.909 15.91z"/></svg></a></li><li class=socials-item><a href=1468387317@qq.com target=_blank rel="external noopener" title=Email><svg viewBox="0 0 512 512" class="icon social-icon"><path d="M464 64H48C21.49 64 0 85.49.0 112v288c0 26.51 21.49 48 48 48h416c26.51.0 48-21.49 48-48V112c0-26.51-21.49-48-48-48zm0 48v40.805c-22.422 18.259-58.168 46.651-134.587 106.49-16.841 13.247-50.201 45.072-73.413 44.701-23.208.375-56.579-31.459-73.413-44.701C106.18 199.465 70.425 171.067 48 152.805V112h416zM48 4e2V214.398c22.914 18.251 55.409 43.862 104.938 82.646 21.857 17.205 60.134 55.186 103.062 54.955 42.717.231 80.509-37.199 103.053-54.947 49.528-38.783 82.032-64.401 104.947-82.653V4e2H48z"/></svg></a></li><li class=socials-item><a href=https://github.com/linyanbin666 target=_blank rel="external noopener" title=GitHub><svg viewBox="0 0 24 24" class="icon social-icon"><path d="M12 .297c-6.63.0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577.0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93.0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176.0.0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22.0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22.0 1.606-.015 2.896-.015 3.286.0.315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a></li></ul></div></footer></div><script>"serviceWorker"in navigator&&window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js")})</script><script>function loadComments(){(function(){const t=document.getElementById("utterances");if(!t)return;const e=document.createElement("script");e.src="https://utteranc.es/client.js",e.async=!0,e.crossOrigin="anonymous",e.setAttribute("repo","linyanbin666/linyanbin666.github.io"),e.setAttribute("issue-term","title");const n=getCurrentTheme()==="dark";n?e.setAttribute("theme","photon-dark"):e.setAttribute("theme","github-light"),t.appendChild(e)})()}</script><script src=https://cdn.jsdelivr.net/npm/medium-zoom@latest/dist/medium-zoom.min.js></script><script>let imgNodes=document.querySelectorAll("div.post-body img");imgNodes=Array.from(imgNodes).filter(e=>e.parentNode.tagName!=="A"),mediumZoom(imgNodes,{background:"hsla(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l), 0.95)"})</script><script src=https://cdn.jsdelivr.net/npm/instant.page@5.1.0/instantpage.min.js type=module defer></script></body></html>

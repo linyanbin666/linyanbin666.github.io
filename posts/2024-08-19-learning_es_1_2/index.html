@@ -1,0 +1,1037 @@
+<!doctype html><html lang=zh-CN><head prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#"><meta charset=UTF-8><meta name=generator content="Hugo 0.133.0"><meta name=theme-color content="#fff"><meta name=color-scheme content="light dark"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=format-detection content="telephone=no, date=no, address=no, email=no"><meta http-equiv=Cache-Control content="no-transform"><meta http-equiv=Cache-Control content="no-siteapp"><title>书籍学习-一本书讲透Elasticsearch：原理、进阶和工程实践（二） | 原生菜鸟</title>
+<link rel=stylesheet href=/css/meme.min.54f473a397d341ce90335ddfd512f3856c19f0a5f89b1c5c8c73909e15a11cdf.css><script src=https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js defer></script><script src=/js/meme.min.32a685b876c1998d527bb4856eb99ced36a759a7edf7abda6454a6973422edef.js></script><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,700;1,400;1,700&amp;family=Source+Code+Pro:ital,wght@0,400;0,700;1,400;1,700&amp;family=Comfortaa:wght@700&amp;display=swap" media=print onload='this.media="all"'><noscript><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,700;1,400;1,700&amp;family=Source+Code+Pro:ital,wght@0,400;0,700;1,400;1,700&amp;family=Comfortaa:wght@700&amp;display=swap"></noscript><meta name=author content="Yanbin Lin"><meta name=description content="本文是个人学习书籍《一本书讲透Elasticsearch：原理、进阶和工程实践》过程……"><link rel="shortcut icon" href=/favicon.ico type=image/x-icon><link rel=mask-icon href=/icons/safari-pinned-tab.svg color=#2a6df4><link rel=apple-touch-icon sizes=180x180 href=/icons/apple-touch-icon.png><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-title content="原生菜鸟"><meta name=apple-mobile-web-app-status-bar-style content="black"><meta name=mobile-web-app-capable content="yes"><meta name=application-name content="原生菜鸟"><meta name=msapplication-starturl content="../../"><meta name=msapplication-TileColor content="#fff"><meta name=msapplication-TileImage content="../../icons/mstile-150x150.png"><link rel=manifest href=/manifest.json><link rel=canonical href=https://ithorizon.top/posts/2024-08-19-learning_es_1_2/><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","datePublished":"2024-08-19T09:32:00+00:00","dateModified":"2024-08-19T23:58:04+08:00","url":"https://ithorizon.top/posts/2024-08-19-learning_es_1_2/","headline":"书籍学习-一本书讲透Elasticsearch：原理、进阶和工程实践（二）","description":"本文是个人学习书籍《一本书讲透Elasticsearch：原理、进阶和工程实践》过程……","inLanguage":"zh-CN","articleSection":"posts","wordCount":5032,"image":"https://ithorizon.top/icons/apple-touch-icon.png","author":{"@type":"Person","description":"To Be Better","email":"1468387317@qq.com","image":"https://ithorizon.top/icons/apple-touch-icon.png","url":"https://ithorizon.top/","name":"Yanbin Lin"},"license":"在保留本文作者及本文链接的前提下，非商业用途随意转载分享","publisher":{"@type":"Organization","name":"原生菜鸟","logo":{"@type":"ImageObject","url":"https://ithorizon.top/icons/apple-touch-icon.png"},"url":"https://ithorizon.top/"},"mainEntityOfPage":{"@type":"WebSite","@id":"https://ithorizon.top/"}}</script><meta name=twitter:card content="summary"><meta property="og:title" content="书籍学习-一本书讲透Elasticsearch：原理、进阶和工程实践（二）"><meta property="og:description" content="本文是个人学习书籍《一本书讲透Elasticsearch：原理、进阶和工程实践》过程……"><meta property="og:url" content="https://ithorizon.top/posts/2024-08-19-learning_es_1_2/"><meta property="og:site_name" content="原生菜鸟"><meta property="og:locale" content="zh"><meta property="og:image" content="https://ithorizon.top/icons/apple-touch-icon.png"><meta property="og:type" content="article"><meta property="article:published_time" content="2024-08-19T09:32:00+00:00"><meta property="article:modified_time" content="2024-08-19T23:58:04+08:00"><meta property="article:section" content="posts"><link rel=preconnect href=https://www.google-analytics.com crossorigin><script async src="https://www.googletagmanager.com/gtag/js?id=G-1KGLPKY6FP"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-1KGLPKY6FP")</script></head><body><div class=container><header class=header><div class=header-wrapper><div class="header-inner single"><div class=site-brand><a href=/ class=brand>原生菜鸟</a></div><nav class=nav><ul class=menu id=menu><li class=menu-item><a href=/posts/><svg viewBox="0 0 512 512" class="icon archive"><path d="M32 448c0 17.7 14.3 32 32 32h384c17.7.0 32-14.3 32-32V160H32v288zm160-212c0-6.6 5.4-12 12-12h104c6.6.0 12 5.4 12 12v8c0 6.6-5.4 12-12 12H204c-6.6.0-12-5.4-12-12v-8zM480 32H32C14.3 32 0 46.3.0 64v48c0 8.8 7.2 16 16 16h480c8.8.0 16-7.2 16-16V64c0-17.7-14.3-32-32-32z"/></svg><span class=menu-item-name>技术</span></a></li><li class=menu-item><a href=/categories/><svg t="1618732736564" class="icon categories" viewBox="0 0 1024 1024" p-id="2007" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200"><defs><style/></defs><path d="M315.0848 551.3728H157.5424C70.8864 551.3728.0 622.2848.0 708.9152v157.5424C0 953.1136 70.912 1024 157.5424 1024h157.5424c86.6304.0 157.5424-70.912 157.5424-157.5424V708.9152c0-86.6304-70.912-157.5424-157.5424-157.5424zm78.7712 315.0848a79.0016 79.0016.0 01-78.7712 78.7712H157.5424a79.0016 79.0016.0 01-78.7712-78.7712V708.9152a79.0016 79.0016.0 0178.7712-78.7712h157.5424a79.0016 79.0016.0 0178.7712 78.7712v157.5424zM866.4576.0H708.9152c-86.6304.0-157.5424 70.912-157.5424 157.5424v157.5424c0 86.6304 70.912 157.5424 157.5424 157.5424h157.5424c86.656.0 157.5424-70.912 157.5424-157.5424V157.5424C1024 70.8864 953.088.0 866.4576.0zm78.7712 315.0848a79.0016 79.0016.0 01-78.7712 78.7712H708.9152a79.0016 79.0016.0 01-78.7712-78.7712V157.5424a79.0016 79.0016.0 0178.7712-78.7712h157.5424a79.0016 79.0016.0 0178.7712 78.7712v157.5424zm-78.7712 236.288H708.9152c-86.6304.0-157.5424 70.912-157.5424 157.5424v157.5424c0 86.656 70.912 157.5424 157.5424 157.5424h157.5424C953.1136 1024 1024 953.088 1024 866.4576V708.9152c0-86.6304-70.912-157.5424-157.5424-157.5424zm78.7712 315.0848a79.0016 79.0016.0 01-78.7712 78.7712H708.9152a79.0016 79.0016.0 01-78.7712-78.7712V708.9152a79.0016 79.0016.0 0178.7712-78.7712h157.5424a79.0016 79.0016.0 0178.7712 78.7712v157.5424zM315.0848.0H157.5424C70.8864.0.0 70.912.0 157.5424v157.5424c0 86.6304 70.912 157.5424 157.5424 157.5424h157.5424c86.6304.0 157.5424-70.912 157.5424-157.5424V157.5424C472.6272 70.8864 401.7152.0 315.0848.0zm78.7712 315.0848a79.0016 79.0016.0 01-78.7712 78.7712H157.5424a79.0016 79.0016.0 01-78.7712-78.7712V157.5424a79.0016 79.0016.0 0178.7712-78.7712h157.5424a79.0016 79.0016.0 0178.7712 78.7712v157.5424z" fill="#707070" p-id="2008"/></svg><span class=menu-item-name>分类</span></a></li><li class=menu-item><a href=/tags/><svg viewBox="0 0 640 512" class="icon tags"><path d="M497.941 225.941 286.059 14.059A48 48 0 00252.118.0H48C21.49.0.0 21.49.0 48v204.118a48 48 0 0014.059 33.941l211.882 211.882c18.744 18.745 49.136 18.746 67.882.0l204.118-204.118c18.745-18.745 18.745-49.137.0-67.882zM112 160c-26.51.0-48-21.49-48-48s21.49-48 48-48 48 21.49 48 48-21.49 48-48 48zm513.941 133.823L421.823 497.941c-18.745 18.745-49.137 18.745-67.882.0l-.36-.36L527.64 323.522c16.999-16.999 26.36-39.6 26.36-63.64s-9.362-46.641-26.36-63.64L331.397.0h48.721a48 48 0 0133.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137.0 67.882z"/></svg><span class=menu-item-name>标签</span></a></li><li class=menu-item><a href=/about/><svg viewBox="0 0 496 512" class="icon user-circle"><path d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm0 96c48.6.0 88 39.4 88 88s-39.4 88-88 88-88-39.4-88-88 39.4-88 88-88zm0 344c-58.7.0-111.3-26.6-146.5-68.2 18.8-35.4 55.6-59.8 98.5-59.8 2.4.0 4.8.4 7.1 1.1 13 4.2 26.6 6.9 40.9 6.9s28-2.7 40.9-6.9c2.3-.7 4.7-1.1 7.1-1.1 42.9.0 79.7 24.4 98.5 59.8C359.3 421.4 306.7 448 248 448z"/></svg><span class=menu-item-name>关于</span></a></li><li class=menu-item><a id=theme-switcher href=#><svg viewBox="0 0 512 512" class="icon theme-icon-light"><path d="M193.2 104.5 242 7a18 18 0 0128 0l48.8 97.5L422.2 70A18 18 0 01442 89.8l-34.5 103.4L505 242a18 18 0 010 28l-97.5 48.8L442 422.2A18 18 0 01422.2 442l-103.4-34.5L270 505a18 18 0 01-28 0l-48.8-97.5L89.8 442A18 18 0 0170 422.2l34.5-103.4-97.5-48.8a18 18 0 010-28l97.5-48.8L70 89.8A18 18 0 0189.8 70zM256 128a128 128 0 10.01.0M256 160a96 96 0 10.01.0"/></svg><svg viewBox="0 0 512 512" class="icon theme-icon-dark"><path d="M27 412A256 256 0 10181 5a11.5 11.5.0 00-5 20A201.5 201.5.0 0142 399a11.5 11.5.0 00-15 13"/></svg></a></li></ul></nav></div></div><input type=checkbox id=nav-toggle aria-hidden=true>
+<label for=nav-toggle class=nav-toggle></label>
+<label for=nav-toggle class=nav-curtain></label></header><main class="main single" id=main><div class=main-inner><article class="content post h-entry" data-align=justify data-type=posts data-toc-num=true><h1 class="post-title p-name">书籍学习-一本书讲透Elasticsearch：原理、进阶和工程实践（二）</h1><div class=post-meta><time datetime=2024-08-19T09:32:00+00:00 class="post-meta-item published dt-published"><svg viewBox="0 0 448 512" class="icon post-meta-icon"><path d="M148 288h-40c-6.6.0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12zm108-12v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm96 0v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm-96 96v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm-96 0v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm192 0v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm96-260v352c0 26.5-21.5 48-48 48H48c-26.5.0-48-21.5-48-48V112c0-26.5 21.5-48 48-48h48V12c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v52h128V12c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v52h48c26.5.0 48 21.5 48 48zm-48 346V160H48v298c0 3.3 2.7 6 6 6h340c3.3.0 6-2.7 6-6z"/></svg>&nbsp;2024.8.19</time>
+<time datetime=2024-08-19T23:58:04+08:00 class="post-meta-item modified dt-updated"><svg viewBox="0 0 448 512" class="icon post-meta-icon"><path d="M4e2 64h-48V12c0-6.627-5.373-12-12-12h-40c-6.627.0-12 5.373-12 12v52H160V12c0-6.627-5.373-12-12-12h-40c-6.627.0-12 5.373-12 12v52H48C21.49 64 0 85.49.0 112v352c0 26.51 21.49 48 48 48h352c26.51.0 48-21.49 48-48V112c0-26.51-21.49-48-48-48zm-6 4e2H54a6 6 0 01-6-6V160h352v298a6 6 0 01-6 6zm-52.849-200.65L198.842 404.519c-4.705 4.667-12.303 4.637-16.971-.068l-75.091-75.699c-4.667-4.705-4.637-12.303.068-16.971l22.719-22.536c4.705-4.667 12.303-4.637 16.97.069l44.104 44.461 111.072-110.181c4.705-4.667 12.303-4.637 16.971.068l22.536 22.718c4.667 4.705 4.636 12.303-.069 16.97z"/></svg>&nbsp;2024.8.19</time>
+<span class="post-meta-item category"><svg viewBox="0 0 512 512" class="icon post-meta-icon"><path d="M464 128H272l-54.63-54.63c-6-6-14.14-9.37-22.63-9.37H48C21.49 64 0 85.49.0 112v288c0 26.51 21.49 48 48 48h416c26.51.0 48-21.49 48-48V176c0-26.51-21.49-48-48-48zm0 272H48V112h140.12l54.63 54.63c6 6 14.14 9.37 22.63 9.37H464v224z"/></svg>&nbsp;<a href=/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/ class="category-link p-category">学习笔记</a></span>
+<span class="post-meta-item wordcount"><svg viewBox="0 0 512 512" class="icon post-meta-icon"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3.0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9.0l60.1 60.1c18.8 18.7 18.8 49.1.0 67.9zM284.2 99.8 21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3.0-17l-111-111c-4.8-4.7-12.4-4.7-17.1.0zM124.1 339.9c-5.5-5.5-5.5-14.3.0-19.8l154-154c5.5-5.5 14.3-5.5 19.8.0s5.5 14.3.0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8.0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"/></svg>&nbsp;5032</span>
+<span class="post-meta-item reading-time"><svg viewBox="0 0 512 512" class="icon post-meta-icon"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5.0-2e2-89.5-2e2-2e2S145.5 56 256 56s2e2 89.5 2e2 2e2-89.5 2e2-2e2 2e2zm61.8-104.4-84.9-61.7c-3.1-2.3-4.9-5.9-4.9-9.7V116c0-6.6 5.4-12 12-12h32c6.6.0 12 5.4 12 12v141.7l66.8 48.6c5.4 3.9 6.5 11.4 2.6 16.8L334.6 349c-3.9 5.3-11.4 6.5-16.8 2.6z"/></svg>&nbsp;11&nbsp;分钟</span></div><div class="post-body e-content"><blockquote><p>本文是个人学习书籍《一本书讲透Elasticsearch：原理、进阶和工程实践》过程中所记录的一些笔记，内容来源于书籍</p></blockquote><h2 id=elasticsearch文档><a href=#elasticsearch文档 class=anchor-link><svg viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96.0-59.27-59.26-59.27-155.7.0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757.0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037.0 01-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482.0 0120.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96.0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454.0 0020.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037.0 00-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639.0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Elasticsearch文档</h2><ul><li><p>新增文档</p><ul><li><p>单条写入（PUT <index>/_doc/[id]）</p></li><li><p>批量写入（POST [index]/_bulk）</p></li></ul></li><li><p>删除文档</p><ul><li><p>单个删除（DELETE <index>/_doc/<id>）</p></li><li><p>批量删除（POST <index>/_delete_by_query）</p></li></ul></li><li><p>修改/更新文档</p><ul><li><p>前置条件：mapping内的_source字段必须设置为true，这也是默认设置。如果将其手动设置为false，执行update会报错</p></li><li><p>单个文档部分更新</p><ul><li><p>在原有基础上新增字段（POST <index>/_update/<id>，“doc”）</p></li><li><p>在原有字段基础上部分修改字段值（POST <index>/_update/<id>，“script”）</p></li><li><p>存在则更新，不存在则插入给定值（POST <index>/_update/<id>，“upsert”）</p></li><li><p>全部文档更新（PUT <index>/_doc/<id>）</p></li></ul><p>PS：Mapping不会因为文档的写入或更新操作而导致收缩，除非通过reindex操作将数据迁移到新的索引上</p></li><li><p>批量文档更新</p><ul><li><p>基于Painless脚本的批量更新（POST <index>/_update_by_query，”script”）</p></li><li><p>基于ingest预处理管道的批量更新（POST <index>/_update_by_query?pipeline=<pipeline>）</p></li><li><p>取消更新</p><ul><li><p>获取更新任务的任务ID（GET tasks?detailed=true&amp;actions=*by_query）</p></li><li><p>查看任务ID，了解任务详情（GET /_tasks/<taskid>）</p></li><li><p>取消更新任务（POST tasks/<taskid>/cancel）</p></li></ul></li></ul></li></ul></li><li><p>迁移文档（reindex）</p><ul><li><p>同集群索引之间的全量数据迁移</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST _reindex
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;conflicts&#34;</span>: <span class=s2>&#34;proceed&#34;</span>,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;source&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;index&#34;</span>: <span class=s2>&#34;source_index&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;dest&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;index&#34;</span>: <span class=s2>&#34;dest_index&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>同集群索引之间基于特定条件的数据迁移</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST _reindex
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;source&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;index&#34;</span>: <span class=s2>&#34;source_index&#34;</span>,
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;term&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;user&#34;</span>: <span class=s2>&#34;horin&#34;</span>
+</span></span><span class=line><span class=cl>			<span class=o>}</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;dest&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;index&#34;</span>: <span class=s2>&#34;dest_index&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>基于script脚本的索引迁移</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST _reindex
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;source&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;index&#34;</span>: <span class=s2>&#34;source_index&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;dest&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;index&#34;</span>: <span class=s2>&#34;dest_index&#34;</span>,
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;version_type&#34;</span>: <span class=s2>&#34;external&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;script&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;lang&#34;</span>: <span class=s2>&#34;painless&#34;</span>,
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;source&#34;</span>: <span class=s2>&#34;if (ctx._source.user == &#39;horin&#39;) { ctx._source.remove(&#39;user&#39;) }&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>基于预处理管道的数据迁移</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST _reindex
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;source&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;index&#34;</span>: <span class=s2>&#34;source_index&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;dest&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;index&#34;</span>: <span class=s2>&#34;dest_index&#34;</span>,
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;pipeline&#34;</span>: <span class=s2>&#34;my_pipeline&#34;</span>,
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>不同集群索引之间的数据迁移</p><ul><li><p>elasticsearch.yml配置文件配置白名单</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>reindex.remote.whitelist: <span class=s2>&#34;xxx&#34;</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>同普通的跨索引数据迁移的实现方式一致</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST _reindex
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;source&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;remote&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;host&#34;</span>: <span class=s2>&#34;http://otherhost:9200&#34;</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>,
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;index&#34;</span>: <span class=s2>&#34;source_index&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;dest&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;index&#34;</span>: <span class=s2>&#34;dest_index&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li><li><p>查看及取消reindex任务</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 获取reindex相关任务</span>
+</span></span><span class=line><span class=cl>GET _tasks?detailed<span class=o>=</span>true<span class=p>&amp;</span><span class=nv>actions</span><span class=o>=</span>*reindex
+</span></span><span class=line><span class=cl><span class=c1># 获取任务ID及相关信息</span>
+</span></span><span class=line><span class=cl>GET /_tasks/&lt;taskId&gt;
+</span></span><span class=line><span class=cl><span class=c1># 取消任务</span>
+</span></span><span class=line><span class=cl>POST /_tasks/&lt;taskId&gt;/_cancel
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>业务零掉线情况下的数据迁移：reindex + 别名</p></li></ul></li></ul><h2 id=elasticsearch脚本><a href=#elasticsearch脚本 class=anchor-link><svg viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96.0-59.27-59.26-59.27-155.7.0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757.0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037.0 01-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482.0 0120.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96.0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454.0 0020.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037.0 00-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639.0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Elasticsearch脚本</h2><ul><li><p>应用场景</p><ul><li><p>自定义字段</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 截取返回日期格式中的年份</span>
+</span></span><span class=line><span class=cl>POST my_index/_search
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;script_fields&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;insert_year&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;script&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;source&#34;</span>: <span class=s2>&#34;doc[&#39;insert_year&#39;].value.getYear()&#34;</span>
+</span></span><span class=line><span class=cl>			<span class=o>}</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>自定义评分</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 自定义评分检索</span>
+</span></span><span class=line><span class=cl>POST my_index/_search
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;function_score&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;script_score&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;script&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;lang&#34;</span>: <span class=s2>&#34;expression&#34;</span>,
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;source&#34;</span>: <span class=s2>&#34;_score * doc[&#39;popularity&#39;]&#34;</span>
+</span></span><span class=line><span class=cl>			<span class=o>}</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>自定义更新</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 已有字段更新为其他字段</span>
+</span></span><span class=line><span class=cl>POST my_index/_update/1
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;script&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;lang&#34;</span>: <span class=s2>&#34;painless&#34;</span>,
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;source&#34;</span>: <span class=s2>&#34;&#34;&#34;
+</span></span></span><span class=line><span class=cl><span class=s2>			ctx._source.theatre = params.theatre
+</span></span></span><span class=line><span class=cl><span class=s2>		&#34;&#34;&#34;</span>,
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;params&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;theatre&#34;</span>: <span class=s2>&#34;jingju&#34;</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>自定义reindex</p></li><li><p>自定义聚合</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST my_index/_search
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;aggs&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;terms_aggs&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;terms&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;script&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>					<span class=s2>&#34;lang&#34;</span>: <span class=s2>&#34;painless&#34;</span>,
+</span></span><span class=line><span class=cl>					<span class=s2>&#34;source&#34;</span>: <span class=s2>&#34;doc[&#39;popularity&#39;].value&#34;</span>
+</span></span><span class=line><span class=cl>				<span class=o>}</span>
+</span></span><span class=line><span class=cl>			<span class=o>}</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>其他自定义操作</p></li></ul></li></ul><h2 id=elasticsearch检索><a href=#elasticsearch检索 class=anchor-link><svg viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96.0-59.27-59.26-59.27-155.7.0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757.0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037.0 01-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482.0 0120.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96.0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454.0 0020.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037.0 00-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639.0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Elasticsearch检索</h2><ul><li><p>常用检索</p><ul><li><p>全文检索</p><ul><li><p>match</p><ul><li><p>应用于高召回率和结果精准度要求较低的场景</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST my_index/_search
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;match&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;title&#34;</span>: <span class=s2>&#34;乌兰新闻&#34;</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li><li><p>match_phrase（短语检索）</p><ul><li><p>适用于注重精准度的召回场景，match_phrase检索要求查询的词条顺序和文档中的词条顺序保持一致，强调短语的完整性和顺序</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST my_index/_search
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;match_phrase&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;title&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;query&#34;</span>: <span class=s2>&#34;乌兰新闻&#34;</span>
+</span></span><span class=line><span class=cl>			<span class=o>}</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li><li><p>match_phrase_prefix（短语前缀检索）</p><ul><li><p>查询词语需要按顺序匹配文档中的内容，同时允许最后一个词语只匹配其前缀</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST my_index/_search
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;match_phrase_prefix&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;title&#34;</span>: <span class=s2>&#34;乌兰新&#34;</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li><li><p>multi_match（多字段检索）</p><ul><li><p>适用于在多个字段上执行match检索的场景</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST my_index/_search
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;multi_match&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;query&#34;</span>: <span class=s2>&#34;乌兰&#34;</span>,
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;fields&#34;</span>: <span class=o>[</span><span class=s2>&#34;title^3&#34;</span>, <span class=s2>&#34;message&#34;</span><span class=o>]</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li><li><p>query_string（支持与或非表达式的检索）</p><ul><li><p>允许用户使用Lucene查询语法直接编写复杂的查询表达式</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST my_index/_search
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;query_string&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;default_field&#34;</span>: <span class=s2>&#34;title&#34;</span>,
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;query&#34;</span>: <span class=s2>&#34;乌兰 AND 新闻&#34;</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li><li><p>simple_query_string</p><ul><li><p>simple_query_string和query_string的区别</p><ul><li><p>simple_query_string对语法的核查并不严格</p></li><li><p>simple_query_string是一种简单的查询语法，只支持单词查询、短语查询或者包含查询，不支持使用通配符和正则表达式</p></li></ul></li></ul></li><li><p>match boolean prefix</p></li><li><p>intervals</p></li><li><p>combined fields</p></li></ul></li><li><p>精确匹配</p><ul><li><p>term（单字段精确匹配）</p><ul><li><p>应用于单字段精准匹配的场景</p></li><li><p>term检索针对的是非text类型，用于text类型时并不会报错，但检索结果一般会达不到预期</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST my_index/_search
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;term&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;name&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;value&#34;</span>: <span class=s2>&#34;horin&#34;</span>
+</span></span><span class=line><span class=cl>			<span class=o>}</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li><li><p>terms（多字段精确匹配）</p><ul><li><p>应用于多值精准匹配场景，例如筛选出具有多个特定标签或状态的项目</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST my_index/_search
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;terms&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;tags&#34;</span>: <span class=o>[</span><span class=s2>&#34;weibo&#34;</span>, <span class=s2>&#34;wechat&#34;</span><span class=o>]</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li><li><p>range（范围检索）</p><ul><li><p>适合对数字、日期或其他可排序数据类型的字段进行范围筛选</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST my_index/_search
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;range&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;popular_degree&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;gte&#34;</span>: 10,
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;lte&#34;</span>: <span class=m>100</span>
+</span></span><span class=line><span class=cl>			<span class=o>}</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li><li><p>exists（是否存在检索）</p><ul><li><p>适用于检查文档中是否存在某个字段，或者该字段是否包含非空值</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST my_index/_search
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;exists&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;field&#34;</span>: <span class=s2>&#34;title.keyword&#34;</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li><li><p>wildcard（通配符检索）</p><ul><li><p>适用于对部分已知内容的文本字段进行模糊检索</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST my_index/_search
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;wildcard&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;title.keyword&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;value&#34;</span>: <span class=s2>&#34;*乌兰*&#34;</span>
+</span></span><span class=line><span class=cl>			<span class=o>}</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li><li><p>prefix（前缀匹配检索）</p><ul><li><p>用于检索以特定字符或字符串作为名称开头的文档</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST my_index/_search
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;prefix&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;title.keyword&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;value&#34;</span>: <span class=s2>&#34;乌兰&#34;</span>
+</span></span><span class=line><span class=cl>			<span class=o>}</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li><li><p>terms set</p><ul><li><p>可以检索匹配一定数量给定词项的文档，其中匹配的数量可以是固定值，也可以是基于另一个字段的动态值</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST my_index/_search
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;terms_set&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;tags&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;terms&#34;</span>: <span class=o>[</span><span class=s2>&#34;喜剧&#34;</span>, <span class=s2>&#34;动作&#34;</span>, <span class=s2>&#34;科幻&#34;</span><span class=o>]</span>,
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;minimum_should_match_field&#34;</span>: <span class=s2>&#34;tags_count&#34;</span>
+</span></span><span class=line><span class=cl>			<span class=o>}</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li><li><p>fuzzy（支持编辑距离的模糊查询）</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST my_index/_search
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;fuzzy&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;title&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;value&#34;</span>: <span class=s2>&#34;language&#34;</span>
+</span></span><span class=line><span class=cl>			<span class=o>}</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>IDs</p><ul><li><p>基于给定的ID组快速召回相关数据</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST my_index/_search
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;ids&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;values&#34;</span>: <span class=o>[</span><span class=s2>&#34;1&#34;</span>, <span class=s2>&#34;2&#34;</span>, <span class=s2>&#34;3&#34;</span><span class=o>]</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li><li><p>regexp（正则匹配检索）</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST my_index/_search
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;regexp&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;product_name.keyword&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;value&#34;</span>: <span class=s2>&#34;Lap..&#34;</span>
+</span></span><span class=line><span class=cl>			<span class=o>}</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li><li><p>多表关联检索</p><ul><li><p>Nested（Nested嵌套类型检索）</p></li><li><p>Has child（子文档查询父文档）</p></li><li><p>Has parent（父文档查询子文档）</p></li><li><p>Parent ID</p></li></ul></li><li><p>组合检索</p><ul><li><p>bool（组合检索）</p><ul><li><p>must：查询结果必须满足指定条件</p></li><li><p>must_not：查询结果必须不满足指定条件</p></li><li><p>filter：过滤条件</p></li><li><p>should：查询结果可以满足的部分条件，具体满足条件的最小数量由minimum_should_match参数控制</p></li></ul></li><li><p>boosting（提升评分）</p></li><li><p>constant score</p></li><li><p>disjunction max</p></li><li><p>function_score（自定义评分）</p></li></ul></li></ul></li><li><p>相对不常用检索</p><ul><li><p>经纬度检索</p></li><li><p>形状类型检索</p></li><li><p>跨度检索</p></li><li><p>特定检索</p><ul><li><p>script（脚本检索）</p></li><li><p>script_score（脚本评分检索）</p></li><li><p>more like this（相似度检索）</p></li><li><p>percolate</p></li><li><p>rank feature</p></li><li><p>wrapper</p></li><li><p>pinned query</p></li><li><p>distance feature</p></li></ul></li></ul></li><li><p>query和filter的区别</p><ul><li><p>query用于评估文档相关性，并对结果进行评分，通常用于搜索场景</p></li><li><p>filter用于筛选文档，不会对文档评分，通常用于过滤场景</p></li></ul></li><li><p>高亮、排序和分页</p><ul><li><p>高亮语法</p><ul><li><p>fragment_size：每个高亮片段的字符数</p></li><li><p>number_of_fragments：高亮最大片段数，如果片段数设置为0，则不返回任何高亮片段，而是将整个字段内容突出显示并返回，同时fragment_size将被忽略。默认值为5</p></li><li><p>fields：待高亮字段</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST kibana_sample_data_ecommerce/_search
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl><span class=s2>&#34;_source&#34;</span>: <span class=o>[</span><span class=s2>&#34;products.product_name&#34;</span><span class=o>]</span>, 
+</span></span><span class=line><span class=cl><span class=s2>&#34;query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;match&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;products.product_name&#34;</span>: <span class=s2>&#34;dress&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>,
+</span></span><span class=line><span class=cl><span class=s2>&#34;highlight&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;number_of_fragments&#34;</span>: 0,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;fragment_size&#34;</span>: 150,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;fields&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;products.product_name&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;pre_tags&#34;</span>: <span class=o>[</span><span class=s2>&#34;&lt;em&gt;&#34;</span><span class=o>]</span>,
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;post_tags&#34;</span>: <span class=o>[</span><span class=s2>&#34;&lt;/em&gt;&#34;</span><span class=o>]</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li><li><p>排序语法</p><ul><li><p>_score：按分数排序</p></li><li><p>_doc：按索引顺序排序（通常用在scroll遍历上）</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST my_index/_search
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;match&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;title&#34;</span>: <span class=s2>&#34;乌兰&#34;</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;sort&#34;</span>: <span class=o>[</span>
+</span></span><span class=line><span class=cl>		<span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;popular_degree&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;order&#34;</span>: <span class=s2>&#34;desc&#34;</span>
+</span></span><span class=line><span class=cl>			<span class=o>}</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>,
+</span></span><span class=line><span class=cl>		<span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;_score&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;order&#34;</span>: <span class=s2>&#34;asc&#34;</span>
+</span></span><span class=line><span class=cl>			<span class=o>}</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>]</span> 
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li><li><p>分页语法</p><ul><li><p>from：表示结果集的起始位置，从0开始，默认值为0</p></li><li><p>size：表示每页返回的文档数量，默认值为10</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST my_index/_search
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;from&#34;</span>: 0,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;size&#34;</span>: 10,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;match_all&#34;</span>: <span class=o>{}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li></ul></li><li><p>自定义评分</p><ul><li><p>Index Boost：在索引层面修改相关度</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST my_index_*/_search
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;indices_boost&#34;</span>: <span class=o>[</span>
+</span></span><span class=line><span class=cl>		<span class=o>{</span>
+</span></span><span class=line><span class=cl>			my_index_1: 1.5
+</span></span><span class=line><span class=cl>		<span class=o>}</span>,
+</span></span><span class=line><span class=cl>		<span class=o>{</span>
+</span></span><span class=line><span class=cl>			my_index_2: 1.2
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>]</span>,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;term&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;subject.keyword&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;value&#34;</span>: <span class=s2>&#34;subject&#34;</span>
+</span></span><span class=line><span class=cl>			<span class=o>}</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>boosting：修改文档相关度</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST my_index/_search
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;bool&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;must&#34;</span>: <span class=o>[</span>
+</span></span><span class=line><span class=cl>				<span class=o>{</span>
+</span></span><span class=line><span class=cl>					<span class=s2>&#34;match&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>						<span class=s2>&#34;title&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>							<span class=s2>&#34;query&#34;</span>: <span class=s2>&#34;新闻&#34;</span>,
+</span></span><span class=line><span class=cl>							<span class=s2>&#34;boost&#34;</span>: <span class=m>3</span>
+</span></span><span class=line><span class=cl>						<span class=o>}</span>
+</span></span><span class=line><span class=cl>					<span class=o>}</span>
+</span></span><span class=line><span class=cl>				<span class=o>}</span>
+</span></span><span class=line><span class=cl>			<span class=o>]</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>negative_boost：降低相关度</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST my_index/_search
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;boosting&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;positive&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;match&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>					<span class=s2>&#34;title&#34;</span>: <span class=s2>&#34;乌兰&#34;</span>
+</span></span><span class=line><span class=cl>				<span class=o>}</span>
+</span></span><span class=line><span class=cl>			<span class=o>}</span>,
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;negative&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;match&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>					<span class=s2>&#34;title&#34;</span>: <span class=s2>&#34;新闻&#34;</span>
+</span></span><span class=line><span class=cl>				<span class=o>}</span>
+</span></span><span class=line><span class=cl>			<span class=o>}</span>,
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;negative_boost&#34;</span>: 0.1
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>function_score：自定义评分</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST my_index/_search
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;function_score&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;match_all&#34;</span>: <span class=o>{}</span>
+</span></span><span class=line><span class=cl>			<span class=o>}</span>,
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;script_score&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;script&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>					<span class=s2>&#34;source&#34;</span>: <span class=s2>&#34;_score * (doc[&#39;sales&#39;].value + doc[&#39;vistors&#39;].value)&#34;</span>
+</span></span><span class=line><span class=cl>				<span class=o>}</span>
+</span></span><span class=line><span class=cl>			<span class=o>}</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>rescore_query：查询后二次打分</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST my_index/_search
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;match&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;title&#34;</span>: <span class=s2>&#34;乌兰&#34;</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;rescore&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;window_size&#34;</span>: 50,
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;rescore_query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;function_socre&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>					<span class=s2>&#34;script_score&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>						<span class=s2>&#34;script&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>							<span class=s2>&#34;source&#34;</span>: <span class=s2>&#34;doc[&#39;popular_degree&#39;].value&#34;</span>
+</span></span><span class=line><span class=cl>						<span class=o>}</span>
+</span></span><span class=line><span class=cl>					<span class=o>}</span>
+</span></span><span class=line><span class=cl>				<span class=o>}</span>
+</span></span><span class=line><span class=cl>			<span class=o>}</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li><li><p>检索模板</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 定义检索模板</span>
+</span></span><span class=line><span class=cl>POST _scripts/cur_search_template
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;script&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;lang&#34;</span>: <span class=s2>&#34;mustache&#34;</span>,
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;source&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;match&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>					<span class=s2>&#34;{{cur_field}}&#34;</span>: <span class=s2>&#34;{{cur_value}}&#34;</span>
+</span></span><span class=line><span class=cl>				<span class=o>}</span>
+</span></span><span class=line><span class=cl>			<span class=o>}</span>,
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;size&#34;</span>: <span class=s2>&#34;{{cur_size}}&#34;</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=c1># 基于检索模板进行检索</span>
+</span></span><span class=line><span class=cl>POST my_index/_search/template
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;id&#34;</span>: <span class=s2>&#34;cur_search_template&#34;</span>,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;params&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;cur_field&#34;</span>: <span class=s2>&#34;item_id&#34;</span>,
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;cur_value&#34;</span>: 1,
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;cur_size&#34;</span>: <span class=m>50</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>分页查询</p><ul><li><p>from+size查询</p><ul><li><p>优缺点</p><ul><li><p>优点</p><ul><li>支持随机翻页</li></ul></li><li><p>缺点</p><ul><li><p>限于max_result_window设置，不能无限制翻页</p></li><li><p>存在深度翻页问题，越往后翻页越慢</p></li></ul></li></ul></li><li><p>适用场景</p><ul><li><p>小型数据集或者从大数据集中返回Top N(N≤10000)结果集的业务场景</p></li><li><p>主流PC搜索引擎中支持随机跳转分页的业务场景</p></li></ul></li><li><p>不适用场景</p><ul><li><p>过度分页或一次请求太多结果</p><ul><li>原因：搜索请求通常会跨多个分片，每个分片必须将其请求的命中内容以及先前页面的命中内容加载到内存中，会显著增加内存和CPU使用率，导致性能下降</li></ul></li></ul></li></ul></li><li><p>search_after查询</p><ul><li><p>执行步骤</p><ul><li><p>创建PIT视图</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST kibana_sample_data_logs/_pit?keep_alive<span class=o>=</span>5m
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>创建基础查询语句</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>GET /_search
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;size&#34;</span>: 10,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;match&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;host&#34;</span>: <span class=s2>&#34;elastic&#34;</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;pit&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=c1># 上一步请求返回的id</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;id&#34;</span>: <span class=s2>&#34;xxx&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;sort&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;response.keyword&#34;</span>: <span class=s2>&#34;asc&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>实现后续翻页</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>GET /_search
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;size&#34;</span>: 10,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;match&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;host&#34;</span>: <span class=s2>&#34;elastic&#34;</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;pit&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;id&#34;</span>: <span class=s2>&#34;xxx&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;sort&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;response.keyword&#34;</span>: <span class=s2>&#34;asc&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>,
+</span></span><span class=line><span class=cl>	<span class=c1># 上一步返回的sort结果</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;search_after&#34;</span>: <span class=o>[</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;200&#34;</span>, <span class=m>4</span>
+</span></span><span class=line><span class=cl>	<span class=o>]</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li><li><p>优缺点</p><ul><li><p>优点</p><ul><li>不严格受制于max_result_window（单次请求值不能超过max_result_window），可以无限地往后翻页</li></ul></li><li><p>缺点</p><ul><li>只支持向后翻页，不支持随机翻页</li></ul></li></ul></li><li><p>适用场景</p><ul><li>适合在手机端应用的场景中使用</li></ul></li></ul></li><li><p>scroll查询</p><ul><li><p>执行步骤</p><ul><li><p>指定检索语句的同时设置scroll上下文保留时间</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST kibana_sample_data_logs/_search?scroll<span class=o>=</span>3m
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;size&#34;</span>: 100,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;query&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;match&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;host&#34;</span>: <span class=s2>&#34;elastic&#34;</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li><li><p>向后翻页，继续获取数据，直到没有要返回的结果为止</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST _search/scroll
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;sroll&#34;</span>: <span class=s2>&#34;3m&#34;</span>,
+</span></span><span class=line><span class=cl>	<span class=c1># 上一步请求返回的id</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;scroll_id&#34;</span>: <span class=s2>&#34;xxx&#34;</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li><li><p>优缺点</p><ul><li><p>优点</p><ul><li>支持全量遍历，是检索大量文档的重要方法，但单次遍历的size值不能超过max_result_window的大小</li></ul></li><li><p>缺点</p><ul><li>响应是非实时的；保留上下文需要具有足够的堆内存空间；需要通过更多的网络请求才能获取所有结果</li></ul></li></ul></li><li><p>适用场景</p><ul><li><p>大量文档检索：当要检索的文档数量很大，甚至需要全量召回数据时，scroll查询是一个很好的选择</p></li><li><p>大量文档的数据处理：滚动API适合对大量文档进行数据处理，例如索引迁移或将数据导入其他技术栈</p></li></ul></li></ul></li></ul></li></ul><h2 id=elasticsearch聚合><a href=#elasticsearch聚合 class=anchor-link><svg viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96.0-59.27-59.26-59.27-155.7.0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757.0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037.0 01-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482.0 0120.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96.0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454.0 0020.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037.0 00-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639.0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Elasticsearch聚合</h2><ul><li><p>聚合分类</p><ul><li><p>分桶聚合：用于将数据分组</p><ul><li><p>Terms分桶聚合（分组聚合结果）</p></li><li><p>Range范围聚合（分区间聚合）</p></li><li><p>Histogram直方图聚合（间隔聚合）</p></li><li><p>Date histogram日期聚合（时间间隔聚合）</p></li><li><p>Date range日期范围聚合（自定义日期范围聚合）</p></li><li><p>Composite组合聚合（支持聚合后分页）</p></li><li><p>Filters过滤聚合（满足给定过滤条件的聚合）</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST my_index/_search
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl><span class=s2>&#34;size&#34;</span>: 0, 
+</span></span><span class=line><span class=cl><span class=s2>&#34;aggs&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;color_terms_agg&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;terms&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;field&#34;</span>: <span class=s2>&#34;color&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li><li><p>指标聚合：用于计算数据的指标</p><ul><li><p>Avg平均值聚合（求平均值）</p></li><li><p>Sum汇总聚合（求汇总之和）</p></li><li><p>Max最大值聚合（求最大值）</p></li><li><p>Min最小值聚合（求最小值）</p></li><li><p>Stats统计聚合（求统计结果值）</p></li><li><p>Top hits详情聚合（求各外层桶的详情）</p></li><li><p>Cardinality去重聚合（去重）</p></li><li><p>Value count计数聚合（计数）</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST my_index/_search
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl><span class=s2>&#34;size&#34;</span>: 0, 
+</span></span><span class=line><span class=cl><span class=s2>&#34;aggs&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;max_agg&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;max&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;field&#34;</span>: <span class=s2>&#34;size&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li><li><p>管道子聚合：对其他聚合的结果进行再次计算和分析，用于对数据进行复杂的分析</p><ul><li><p>Bucket selector选择子聚合</p></li><li><p>Bucket sort排序子聚合</p></li><li><p>Max bucket最大值子聚合</p></li><li><p>Min bucket最小值子聚合</p></li><li><p>Stats bucket统计子聚合</p></li><li><p>Sum bucket求和子聚合</p><div class=highlight><div class=chroma><div class=table-container><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>POST my_index/_search
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl><span class=s2>&#34;size&#34;</span>: 0, 
+</span></span><span class=line><span class=cl><span class=s2>&#34;aggs&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;hole_terms_agg&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;terms&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;field&#34;</span>: <span class=s2>&#34;has_hole&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>,
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;aggs&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;max_value_agg&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>				<span class=s2>&#34;max&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>					<span class=s2>&#34;field&#34;</span>: <span class=s2>&#34;size&#34;</span>
+</span></span><span class=line><span class=cl>				<span class=o>}</span>
+</span></span><span class=line><span class=cl>			<span class=o>}</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>,
+</span></span><span class=line><span class=cl>	<span class=s2>&#34;max_hole_color_agg&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>		<span class=s2>&#34;max_bucket&#34;</span>: <span class=o>{</span>
+</span></span><span class=line><span class=cl>			<span class=s2>&#34;buckets_path&#34;</span>: <span class=s2>&#34;hole_terms_agg&gt;max_value_agg&#34;</span>
+</span></span><span class=line><span class=cl>		<span class=o>}</span>
+</span></span><span class=line><span class=cl>	<span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div></li></ul></li></ul></li></ul><br></div></article><div class=related-posts><h2 class=related-title>相关文章：<svg viewBox="0 0 512 512" class="icon related-icon"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm144 276c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6.0-12-5.4-12-12v-92h-92c-6.6.0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6.0 12 5.4 12 12v92h92c6.6.0 12 5.4 12 12v56z"/></svg></h2><ul class=related-list><li class=related-item><a href=/posts/2024-08-19-learning_es_1_3/ class=related-link>书籍学习-一本书讲透Elasticsearch：原理、进阶和工程实践（三）</a></li><li class=related-item><a href=/posts/2024-08-19-learning_es_1_1/ class=related-link>书籍学习-一本书讲透Elasticsearch：原理、进阶和工程实践（一）</a></li><li class=related-item><a href=/posts/2022-11-01-learning_mysql_45_3/ class=related-link>专栏学习-MySQL实战45讲（三）</a></li><li class=related-item><a href=/posts/2022-11-01-learning_mysql_45/ class=related-link>专栏学习-MySQL实战45讲（二）</a></li><li class=related-item><a href=/posts/2022-10-19-learning_jvm_2/ class=related-link>书籍学习-深入理解Java虚拟机（二）</a></li></ul></div><div class=post-tags><a href=/tags/elasticsearch/ rel=tag class=post-tags-link><svg viewBox="0 0 512 512" class="icon tag-icon"><path d="M0 252.118V48C0 21.49 21.49.0 48 0h204.118a48 48 0 0133.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137.0 67.882L293.823 497.941c-18.745 18.745-49.137 18.745-67.882.0L14.059 286.059A48 48 0 010 252.118zM112 64c-26.51.0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48z"/></svg>ElasticSearch</a>
+<a href=/tags/es/ rel=tag class=post-tags-link><svg viewBox="0 0 512 512" class="icon tag-icon"><path d="M0 252.118V48C0 21.49 21.49.0 48 0h204.118a48 48 0 0133.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137.0 67.882L293.823 497.941c-18.745 18.745-49.137 18.745-67.882.0L14.059 286.059A48 48 0 010 252.118zM112 64c-26.51.0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48z"/></svg>ES</a></div><ul class=post-nav><li class=post-nav-prev><a href=/posts/2024-08-19-learning_es_1_3/ rel=prev>&lt; 书籍学习-一本书讲透Elasticsearch：原理、进阶和工程实践（三）</a></li><li class=post-nav-next><a href=/posts/2024-08-19-learning_es_1_1/ rel=next>书籍学习-一本书讲透Elasticsearch：原理、进阶和工程实践（一） ></a></li></ul><div id=utterances></div></div></main><div id=back-to-top class=back-to-top><a href=#><svg viewBox="0 0 448 512" class="icon arrow-up"><path d="M34.9 289.5l-22.2-22.2c-9.4-9.4-9.4-24.6.0-33.9L207 39c9.4-9.4 24.6-9.4 33.9.0l194.3 194.3c9.4 9.4 9.4 24.6.0 33.9L413 289.4c-9.5 9.5-25 9.3-34.3-.4L264 168.6V456c0 13.3-10.7 24-24 24h-32c-13.3.0-24-10.7-24-24V168.6L69.2 289.1c-9.3 9.8-24.8 10-34.3.4z"/></svg></a></div><footer id=footer class=footer><div class=footer-inner><div class=site-info>©&nbsp;2021–2024&nbsp;<svg viewBox="0 0 512 512" class="icon footer-icon"><path d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3.0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"/></svg>&nbsp;Yanbin Lin</div><div class=powered-by>Powered by <a href=https://github.com/gohugoio/hugo target=_blank rel=noopener>Hugo</a> | Theme is <a href=https://github.com/reuixiy/hugo-theme-meme target=_blank rel=noopener>MemE</a></div><div class=site-copyright>在保留本文作者及本文链接的前提下，非商业用途随意转载分享</div><ul class=socials><li class=socials-item><a href=/rss.xml target=_blank rel="external noopener" title=RSS><svg viewBox="0 0 24 24" class="icon social-icon"><path d="M19.199 24C19.199 13.467 10.533 4.8.0 4.8V0c13.165.0 24 10.835 24 24h-4.801zM3.291 17.415c1.814.0 3.293 1.479 3.293 3.295.0 1.813-1.485 3.29-3.301 3.29C1.47 24 0 22.526.0 20.71s1.475-3.294 3.291-3.295zM15.909 24h-4.665c0-6.169-5.075-11.245-11.244-11.245V8.09c8.727.0 15.909 7.184 15.909 15.91z"/></svg></a></li><li class=socials-item><a href=1468387317@qq.com target=_blank rel="external noopener" title=Email><svg viewBox="0 0 512 512" class="icon social-icon"><path d="M464 64H48C21.49 64 0 85.49.0 112v288c0 26.51 21.49 48 48 48h416c26.51.0 48-21.49 48-48V112c0-26.51-21.49-48-48-48zm0 48v40.805c-22.422 18.259-58.168 46.651-134.587 106.49-16.841 13.247-50.201 45.072-73.413 44.701-23.208.375-56.579-31.459-73.413-44.701C106.18 199.465 70.425 171.067 48 152.805V112h416zM48 4e2V214.398c22.914 18.251 55.409 43.862 104.938 82.646 21.857 17.205 60.134 55.186 103.062 54.955 42.717.231 80.509-37.199 103.053-54.947 49.528-38.783 82.032-64.401 104.947-82.653V4e2H48z"/></svg></a></li><li class=socials-item><a href=https://github.com/linyanbin666 target=_blank rel="external noopener" title=GitHub><svg viewBox="0 0 24 24" class="icon social-icon"><path d="M12 .297c-6.63.0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577.0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93.0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176.0.0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22.0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22.0 1.606-.015 2.896-.015 3.286.0.315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a></li></ul></div></footer></div><script>"serviceWorker"in navigator&&window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js")})</script><script>function loadComments(){(function(){const t=document.getElementById("utterances");if(!t)return;const e=document.createElement("script");e.src="https://utteranc.es/client.js",e.async=!0,e.crossOrigin="anonymous",e.setAttribute("repo","linyanbin666/linyanbin666.github.io"),e.setAttribute("issue-term","title");const n=getCurrentTheme()==="dark";n?e.setAttribute("theme","photon-dark"):e.setAttribute("theme","github-light"),t.appendChild(e)})()}</script><script src=https://cdn.jsdelivr.net/npm/medium-zoom@latest/dist/medium-zoom.min.js></script><script>let imgNodes=document.querySelectorAll("div.post-body img");imgNodes=Array.from(imgNodes).filter(e=>e.parentNode.tagName!=="A"),mediumZoom(imgNodes,{background:"hsla(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l), 0.95)"})</script><script src=https://cdn.jsdelivr.net/npm/instant.page@5.1.0/instantpage.min.js type=module defer></script></body></html>
