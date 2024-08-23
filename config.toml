@@ -388,7 +388,7 @@ uglyURLs = false
     # tree organization structure of your
     # posts.
 
-    categoryBy = "sections"
+    categoryBy = "categories"
     # ATTENTION: If you set it to `sections`,
     #            be sure to delete `categories`
     #            in `taxonomies` at the top
